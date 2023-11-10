@@ -1,0 +1,32 @@
+{
+  "name": "newcs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "TadasA",
+  "license": "ISC",
+  "dependencies": {
+    "@laihoe/demoparser2": "^0.9.1",
+    "axios": "^1.5.1",
+    "bcrypt": "^5.1.1",
+    "bignumber.js": "^9.1.2",
+    "body-parser": "^1.20.2",
+    "bz2": "^1.0.1",
+    "csgo": "^1.5.15",
+    "decompress": "^4.2.1",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "globaloffensive": "^3.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.5.3",
+    "node-fetch": "^2.6.1",
+    "steam-user": "^5.0.1",
+    "steamcommunity": "^3.46.1",
+    "unbzip2-stream": "^1.4.3",
+    "unzipper": "^0.10.14",
+    "zlib": "^1.0.5"
+  }
+}
