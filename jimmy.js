@@ -19,7 +19,7 @@ var token;
 
 async function getApiToken() {
     console.log('get token');
-    const tokenResponse = await fetch("http://localhost:8080/v1/auth/login", {
+    const tokenResponse = await fetch("https://dzimyneutron.herokuapp.com/v1/auth/login", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -58,7 +58,7 @@ async function sendCsMatchDetails(details) {
     const resolvedDetails = await details;
 
     try {
-        var response = await fetch("http://localhost:8080/v1/cs/recent-game", {
+        var response = await fetch("https://dzimyneutron.herokuapp.com/v1/cs/recent-game", {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
