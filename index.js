@@ -217,6 +217,11 @@ logOnDetails.auth_code = process.env.AUTH_CODE;
 
 user.logOn(logOnDetails);
 
+user.on('steamGuard', (domain, callback) => {
+    const steamGuardCode = process.env.AUTH_CODE;
+    callback(steamGuardCode);
+});
+
 const apiRouter = require('./api');
 
 // Use the API router for all routes starting with '/cs'
