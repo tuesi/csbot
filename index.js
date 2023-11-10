@@ -210,9 +210,10 @@ csgo.on('error', (err) => {
 
 var logOnDetails = {
     "accountName": process.env.ACCOUNT_NAME,
-    "password": process.env.ACCOUNT_PASSWORD,
-    "auth_code": process.env.AUTH_CODE
+    "password": process.env.ACCOUNT_PASSWORD
 };
+
+logOnDetails.auth_code = process.env.AUTH_CODE;
 
 user.logOn(logOnDetails);
 
