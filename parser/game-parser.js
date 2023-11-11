@@ -129,6 +129,7 @@ function getDataForPlayer(demoPath, steamId, name, team) {
 
     let scores = parseEvent(demoPath, 'rank_update', ["team_name", "player_steamid", "score", "total_cash_spent", "kills_total", "deaths_total", "assists_total", "headshot_kills_total", "damage_total", "utility_damage_total", "enemies_flashed_total", "team_rounds_total", "ace_rounds_total", "4k_rounds_total", "3k_rounds_total"]);
     let userScore = scores.filter(score => score.user_steamid == steamId);
+    console.log(userScore);
     let CT = scores.filter(score => score.user_team_name == "CT");
     let T = scores.filter(score => score.user_team_name == "TERRORIST");
 
@@ -183,6 +184,9 @@ function getDataForPlayer(demoPath, steamId, name, team) {
     playerStats.pimpesMentele = pimpesMentele;
     playerStats.team = team;
     playerStats.matchWon = (userTeam == "TERRORIST" && TWinAmount > CTWinAmount || userTeam == "CT" && CTWinAmount > TWinAmount) ? true : false;
+    playerStats.rankNew = userScore[0].rank_new;
+    playerStats.rankOld = userScore[0].rank_old;
+    playerStats.rankChange = userScore[0].rank_change;
 
 
     //HLTV 2.0

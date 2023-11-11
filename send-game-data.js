@@ -19,6 +19,7 @@ async function send(matchId, data) {
     }
 
     await jimmyApi.sendCsMatchDetails(data);
+
     //console.log(data);
 
     //UNCOMMENT TO DELETE OLD FILE

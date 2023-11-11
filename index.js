@@ -127,7 +127,7 @@ csgo.on('connectedToGC', () => {
 
     //checkForNewGames();
 
-    //csgo.requestGame("CSGO-bFw5F-Yw4fr-D7SD5-aGQtM-hRyQN");
+    //csgo.requestGame("CSGO-LZSMA-so3Rf-JsM8E-5M2Zd-CjW9G");
 
     // var decoder = new cs.SharecodeDecoder("CSGO-WAkZq-FN8Sk-JKJTP-7nDW5-HVMfN");
     // var decoded = decoder.decode();
