@@ -23,21 +23,25 @@ router.get('/register', verifyToken, async (req, res) => {
     if (existingUser.length > 0) {
         return res.status(400).json({ error: `User already exists` });
     } else {
-        console.log(steamId, matchAuthId, lastMatchId);
-        const newLastMatchId = await getGameCode.makeAPICallWithCode(steamId, matchAuthId, lastMatchId);
-        const matchId = await getMatchId.getMatchId(newLastMatchId);
-        var lastMatchDataSend = false;
+        try {
+            console.log(steamId, matchAuthId, lastMatchId);
+            const newLastMatchId = await getGameCode.makeAPICallWithCode(steamId, matchAuthId, lastMatchId);
+            const matchId = await getMatchId.getMatchId(newLastMatchId);
+            var lastMatchDataSend = false;
 
-        // Create a new user document and save it to the database
-        const newUser = new User({
-            discordId,
-            steamId,
-            matchAuthId,
-            lastMatchId: newLastMatchId,
-            matchId,
-            firstMatchId: lastMatchId,
-            lastMatchDataSend
-        });
+            // Create a new user document and save it to the database
+            const newUser = new User({
+                discordId,
+                steamId,
+                matchAuthId,
+                lastMatchId: newLastMatchId,
+                matchId,
+                firstMatchId: lastMatchId,
+                lastMatchDataSend
+            });
+        } catch (error) {
+            console.log('error getting data');
+        }
 
         try {
             await newUser.save();
