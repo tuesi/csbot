@@ -39,11 +39,7 @@ router.get('/register', verifyToken, async (req, res) => {
                 firstMatchId: lastMatchId,
                 lastMatchDataSend
             });
-        } catch (error) {
-            console.log('error getting data');
-        }
 
-        try {
             await newUser.save();
             res.json({ message: 'Data saved to MongoDB' });
         } catch (error) {

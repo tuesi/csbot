@@ -78,6 +78,8 @@ async function demofileParse(demoPath) {
 
     let scores = parseEvent(demoPath, 'rank_update', ["team_name", "team_rounds_total"]);
 
+    console.log(scores);
+
     let CT = scores.filter(score => score.user_team_name == "CT");
     let T = scores.filter(score => score.user_team_name == "TERRORIST");
 
