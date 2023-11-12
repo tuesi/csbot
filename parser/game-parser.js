@@ -124,6 +124,9 @@ function getDataForPlayer(demoPath, steamId, name, team) {
 
     //console.log(name);
 
+    let events = parseEvent(demoPath, "other_death");
+    let chickenKills = events.filter(event => event.othertype == "chicken" && event.attacker_steamid == steamId);
+
     let mvps = parseEvent(demoPath, 'round_mvp', ["player_steamid"], ["total_rounds_played"]);
     let allMvps = mvps.filter(mvp => mvp.user_steamid == steamId);
 
@@ -187,6 +190,7 @@ function getDataForPlayer(demoPath, steamId, name, team) {
     playerStats.rankNew = userScore[0].rank_new;
     playerStats.rankOld = userScore[0].rank_old;
     playerStats.rankChange = userScore[0].rank_change;
+    playerStats.chickenKills = chickenKills.length;
 
 
     //HLTV 2.0

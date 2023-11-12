@@ -15,6 +15,7 @@
     "bignumber.js": "^9.1.2",
     "body-parser": "^1.20.2",
     "bz2": "^1.0.1",
+    "cors": "^2.8.5",
     "csgo": "^1.5.15",
     "decompress": "^4.2.1",
     "dotenv": "^16.3.1",

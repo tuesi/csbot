@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('./mongodb/user-db-model');
+const GameData = require('./mongodb/game-db-model');
 const APIUser = require('./mongodb/api-user-model');
 const getGameCode = require('./get-latest-game-code');
 const getMatchId = require('./get-match-id');
@@ -95,6 +96,21 @@ router.post('/login', async (req, res) => {
             console.error('Error logging in:', error);
             res.status(500).json({ error: 'Internal server error' });
         });
+});
+
+router.get('/match', async (req, res) => {
+    // Check if all required parameters are provided
+    const { matchId } = req.query;
+    if (!matchId) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+    }
+
+    const foundMatch = await GameData.findById(matchId).exec();
+    if (foundMatch) {
+        return res.json({ foundMatch });
+    } else {
+        return res.status(404).json({ error: 'Game data does not exist' });
+    }
 });
 
 module.exports = router;

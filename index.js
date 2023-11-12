@@ -8,6 +8,7 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
+const cors = require('cors');
 require('dotenv').config();
 
 const newGameCheck = require('./new-game-check');
@@ -127,7 +128,7 @@ csgo.on('connectedToGC', () => {
 
     //checkForNewGames();
 
-    //csgo.requestGame("CSGO-LZSMA-so3Rf-JsM8E-5M2Zd-CjW9G");
+    csgo.requestGame("CSGO-CAcFS-fCBab-eiurb-EEK5W-4P47M");
 
     // var decoder = new cs.SharecodeDecoder("CSGO-WAkZq-FN8Sk-JKJTP-7nDW5-HVMfN");
     // var decoded = decoder.decode();
@@ -221,6 +222,13 @@ user.on('steamGuard', (domain, callback) => {
     const steamGuardCode = process.env.AUTH_CODE;
     callback(steamGuardCode);
 });
+
+app.use(
+    cors({
+        origin: 'http://localhost:4200',
+        optionsSuccessStatus: 200
+    })
+);
 
 const apiRouter = require('./api');
 

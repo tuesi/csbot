@@ -1,4 +1,5 @@
 const User = require('./mongodb/user-db-model');
+const GameData = require('./mongodb/game-db-model');
 const fs = require('fs');
 
 const jimmyApi = require('./jimmy');
@@ -18,30 +19,44 @@ async function send(matchId, data) {
         }
     }
 
+    const gameId = await saveGameData(data);
+
+    data.gameId = gameId.toString();
+
     await jimmyApi.sendCsMatchDetails(data);
 
     //console.log(data);
 
     //UNCOMMENT TO DELETE OLD FILE
 
-    // var filePath = `currentDemo${matchId}.dem`;
+    var filePath = `currentDemo${matchId}.dem`;
 
-    // fs.access(filePath, fs.constants.F_OK, (err) => {
-    //     if (err) {
-    //         console.error('File does not exist:', err);
-    //         return;
-    //     }
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+        if (err) {
+            console.error('File does not exist:', err);
+            return;
+        }
 
-    //     // File exists, so delete it
-    //     fs.unlink(filePath, (err) => {
-    //         if (err) {
-    //             console.error('Error deleting file:', err);
-    //             return;
-    //         }
+        // File exists, so delete it
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error('Error deleting file:', err);
+                return;
+            }
 
-    //         console.log('File deleted successfully');
-    //     });
-    // });
+            console.log('File deleted successfully');
+        });
+    });
+}
+
+async function saveGameData(data) {
+    const gameData = new GameData(data);
+    try {
+        const savedData = await gameData.save();
+        return savedData._id;
+    } catch (error) {
+        console.log("error saving game data");
+    }
 }
 
 module.exports = { send }
