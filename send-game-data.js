@@ -6,6 +6,7 @@ const jimmyApi = require('./jimmy');
 
 async function send(matchId, data) {
     const users = await User.find({ matchId: matchId, lastMatchDataSend: false }).exec();
+    //const users = await User.find().exec();
     for (const user of users) {
         // Update lastMatchDataSend to true
         user.lastMatchDataSend = true;
