@@ -34,7 +34,10 @@ const gameDataSchema = new mongoose.Schema({
             matchWon: Boolean,
             rankNew: Number,
             rankOld: Number,
-            rankChange: Number
+            rankChange: Number,
+            hltv2: String,
+            multikillRounds: Number,
+            openingKills: Number
         }
     ]
 });
