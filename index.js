@@ -66,7 +66,9 @@ async function checkForNewGames() {
 
 //5 minutes
 //UNCOMMENT
-setInterval(checkForNewGames, 300000);
+// OLD setInterval(checkForNewGames, 300000);
+
+cron.schedule('*/5 * * * *', checkForNewGames);
 
 
 //how to create replay demo file url

@@ -1,6 +1,6 @@
 class PlayerStat {
     constructor(discordId, steamId, name, imageUrl, mvps, kills, deaths, assists, totalCashSpend, totalDamage, totalUtilityDamage, totalEnemiesFlashed, totalHeadshotCount, totalCurrentMapWins, score, adr, matchWon, headshotPercentage,
-        teamFlash, totalAce, total4kills, total3kills, pimpesMentele, team, rankNew, rankOld, rankChange, hltv2, multikillRounds, openingKills, heDmg, molotovDmg) {
+        teamFlash, totalAce, total4kills, total3kills, pimpesMentele, team, rankNew, rankOld, rankChange, hltv2, multikillRounds, openingKills, heDmg, molotovDmg, awpNoScope) {
         this.discordId = discordId || '';
         this.steamId = steamId || '';
         this.name = name || '';
@@ -33,6 +33,7 @@ class PlayerStat {
         this.openingKills = openingKills;
         this.heDmg = heDmg;
         this.molotovDmg = molotovDmg;
+        this.awpNoScope = awpNoScope;
     }
 }
 

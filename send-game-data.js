@@ -57,6 +57,7 @@ async function saveGameData(data) {
         const savedData = await gameData.save();
         return savedData._id;
     } catch (error) {
+        console.log(error);
         console.log("error saving game data");
     }
 }

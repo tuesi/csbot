@@ -176,6 +176,17 @@ function getDataForPlayer(demoPath, steamId, name, team) {
     let heDmg = playerHurtEvents.filter(e => e.weapon == "hegrenade" && e.attacker_steamid == steamId)
     let molotovDmg = playerHurtEvents.filter(e => (e.weapon == "molotov" || e.weapon == "inferno") && e.attacker_steamid == steamId);
 
+    let heAllDmg = 0;
+    let molotovAllDmg = 0;
+
+    heDmg.forEach(dmg => {
+        heAllDmg += dmg.dmg_health;
+    });
+
+    molotovDmg.forEach(dmg => {
+        molotovAllDmg += dmg.dmg_health;
+    });
+
     var playerStats = new PlayerStat();
 
     playerStats.steamId = steamId;
@@ -204,8 +215,9 @@ function getDataForPlayer(demoPath, steamId, name, team) {
     playerStats.rankOld = userScore[0].rank_old;
     playerStats.rankChange = userScore[0].rank_change;
     playerStats.chickenKills = chickenKills.length;
-    playerStats.heDmg = heDmg;
-    playerStats.molotovDmg = molotovDmg;
+    playerStats.heDmg = heAllDmg;
+    playerStats.molotovDmg = molotovAllDmg;
+    playerStats.awpNoScope = noScopeAwpKills.length;
 
 
     //HLTV 2.0

@@ -15,7 +15,6 @@ async function getApiToken() {
     if (tokenResponse.status == 200) {
         const tokenData = await tokenResponse.json();
         token = tokenData.token;
-        console.log(token);
     }
 }
 

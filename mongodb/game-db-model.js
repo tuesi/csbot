@@ -39,7 +39,8 @@ const gameDataSchema = new mongoose.Schema({
             multikillRounds: Number,
             openingKills: Number,
             heDmg: Number,
-            molotovDmg: Number
+            molotovDmg: Number,
+            awpNoScope: Number
         }
     ]
 });
