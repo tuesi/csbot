@@ -132,7 +132,7 @@ function getDataForPlayer(demoPath, steamId, name, team) {
 
     let scores = parseEvent(demoPath, 'rank_update', ["team_name", "player_steamid", "score", "total_cash_spent", "kills_total", "deaths_total", "assists_total", "headshot_kills_total", "damage_total", "utility_damage_total", "enemies_flashed_total", "team_rounds_total", "ace_rounds_total", "4k_rounds_total", "3k_rounds_total"]);
     let userScore = scores.filter(score => score.user_steamid == steamId);
-    console.log(userScore);
+
     let CT = scores.filter(score => score.user_team_name == "CT");
     let T = scores.filter(score => score.user_team_name == "TERRORIST");
 
@@ -176,7 +176,6 @@ function getDataForPlayer(demoPath, steamId, name, team) {
     playerStats.totalEnemiesFlashed = userScore[0].user_enemies_flashed_total;
     playerStats.totalHeadshotCount = userScore[0].user_headshot_kills_total;
     playerStats.totalCurrentMapWins = userScore[0].num_wins;
-    playerStats.cashSpent = userScore[0].user_total_cash_spent;
     playerStats.score = userScore[0].user_score;
     playerStats.adr = Math.round(userScore[0].user_damage_total / maxRound);
     playerStats.totalAce = userScore[0].user_ace_rounds_total;
@@ -374,8 +373,8 @@ function getDataForPlayer(demoPath, steamId, name, team) {
 
     var playerAssitsPerRound = userScore[0].user_assists_total / maxRound;
 
-    console.log("Round KAST: " + roundsCountToKAST);
-    console.log("Max round:" + maxRound);
+    //console.log("Round KAST: " + roundsCountToKAST);
+    //console.log("Max round:" + maxRound);
 
     var KAST = ((roundsCountToKAST) / maxRound) * 100;
 
@@ -387,8 +386,11 @@ function getDataForPlayer(demoPath, steamId, name, team) {
 
     var HLTV20 = (0.0073 * KAST) + (0.3591 * KPR) + (-0.5329 * DPR) + (0.2372 * Impact) + (0.0032 * ADR) + 0.1587;
 
-    console.log("Player HLTV 2.0 Rating: " + name + " : " + HLTV20);
+    //console.log("Player HLTV 2.0 Rating: " + name + " : " + HLTV20);
 
+    player.hltv2 = HLTV20;
+    player.multikillRounds = multikills;
+    player.openingKills = opening_kills;
 
     //Add
     //Game type? ar machmaking ar competetive? Ar dabar visur pagal damage vieta skaiciuoja?

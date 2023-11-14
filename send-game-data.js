@@ -51,6 +51,7 @@ async function send(matchId, data) {
 }
 
 async function saveGameData(data) {
+    data.gameDate = new Date();
     const gameData = new GameData(data);
     try {
         const savedData = await gameData.save();

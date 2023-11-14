@@ -23,6 +23,7 @@
     "globaloffensive": "^3.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.3",
+    "node-cron": "^3.0.3",
     "node-fetch": "^2.6.1",
     "steam-user": "^5.0.1",
     "steamcommunity": "^3.46.1",

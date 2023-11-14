@@ -1,9 +1,10 @@
 class PlayerStat {
-    constructor(discordId, steamId, name, mvps, kills, deaths, assists, totalCashSpend, totalDamage, totalUtilityDamage, totalEnemiesFlashed, totalHeadshotCount, totalCurrentMapWins, cashSpent, score, adr, matchWon, headshotPercentage,
-        teamFlash, totalAce, total4kills, total3kills, pimpesMentele, team, rankNew, rankOld, rankChange) {
+    constructor(discordId, steamId, name, imageUrl, mvps, kills, deaths, assists, totalCashSpend, totalDamage, totalUtilityDamage, totalEnemiesFlashed, totalHeadshotCount, totalCurrentMapWins, score, adr, matchWon, headshotPercentage,
+        teamFlash, totalAce, total4kills, total3kills, pimpesMentele, team, rankNew, rankOld, rankChange, hltv2, multikillRounds, openingKills) {
         this.discordId = discordId || '';
         this.steamId = steamId || '';
         this.name = name || '';
+        this.imageUrl = imageUrl || '';
         this.mvps = mvps || 0;
         this.kills = kills || 0;
         this.deaths = deaths || 0;
@@ -14,7 +15,6 @@ class PlayerStat {
         this.totalEnemiesFlashed = totalEnemiesFlashed || 0;
         this.totalHeadshotCount = totalHeadshotCount || 0;
         this.totalCurrentMapWins = totalCurrentMapWins || 0;
-        this.cashSpent = cashSpent || 0;
         this.score = score || 0;
         this.adr = adr || 0.0;
         this.totalAce = totalAce;
@@ -28,6 +28,9 @@ class PlayerStat {
         this.rankNew = rankNew;
         this.rankOld = rankOld;
         this.rankChange = rankChange;
+        this.hltv2 = hltv2;
+        this.multikillRounds = multikillRounds;
+        this.openingKills = openingKills;
     }
 }
 

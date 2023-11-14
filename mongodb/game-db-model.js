@@ -4,8 +4,10 @@ const gameDataSchema = new mongoose.Schema({
     map: String,
     team1Score: Number,
     team2Score: Number,
+    gameDate: Date,
     playerStats: [
         {
+            vac: { type: Boolean, default: false },
             discordId: String,
             steamId: String,
             name: String,

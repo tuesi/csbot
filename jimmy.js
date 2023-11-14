@@ -3,22 +3,7 @@ const loginData = { username: process.env.API_USERNAME, password: process.env.AP
 
 var token;
 
-// async function getApiToken() {
-//     const tokenResponse = await fetch("https://dzimyneutron.herokuapp.com/v1/auth/login", {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(loginData)
-//     });
-//     if (tokenResponse.status == 200) {
-//         const token = await tokenResponse.json();
-//         this.token = token.token;
-//     }
-// }
-
 async function getApiToken() {
-    console.log('get token');
     const tokenResponse = await fetch(process.env.JIMMY_URL + "v1/auth/login", {
         method: 'POST',
         headers: {
@@ -34,26 +19,11 @@ async function getApiToken() {
     }
 }
 
-// async function sendCsMatchDetails(details) {
-//     console.log("send");
-//     try {
-//         await fetch("https://dzimyneutron.herokuapp.com/v1/cs/recent-gamet", {
-//             method: 'POST',
-//             headers: {
-//                 Authorization: `Bearer ${this.token}`,
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify(details)
-//         });
-//     } catch {
-//         console.log('error sending cs data');
-//     }
-// }
-
 async function sendCsMatchDetails(details) {
 
-    //Maybe need to remove when deploying
-    await getApiToken();
+    if (!token) {
+        await getApiToken();
+    }
 
     const resolvedDetails = await details;
 
@@ -77,4 +47,32 @@ async function sendCsMatchDetails(details) {
     }
 }
 
-module.exports = { sendCsMatchDetails }
+async function sendCsVacBanDetails(details) {
+
+    if (!token) {
+        await getApiToken();
+    }
+
+    const resolvedDetails = await details;
+
+    try {
+        var response = await fetch(process.env.JIMMY_URL + "v1/cs/vac-report", {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(resolvedDetails)
+        });
+
+        console.log(response);
+        if (response.status === 403) {
+            await getApiToken();
+            await sendCsVacBanDetails(details);
+        }
+    } catch {
+        console.log('error sending cs data');
+    }
+}
+
+module.exports = { sendCsMatchDetails, sendCsVacBanDetails }

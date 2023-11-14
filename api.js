@@ -5,6 +5,7 @@ const GameData = require('./mongodb/game-db-model');
 const APIUser = require('./mongodb/api-user-model');
 const getGameCode = require('./get-latest-game-code');
 const getMatchId = require('./get-match-id');
+const fetch = require('node-fetch');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { verifyToken } = require('./token');
@@ -107,10 +108,41 @@ router.get('/match', async (req, res) => {
 
     const foundMatch = await GameData.findById(matchId).exec();
     if (foundMatch) {
-        return res.json({ foundMatch });
+        const newMatch = JSON.parse(JSON.stringify(foundMatch));
+        const playerDataPromises = newMatch.playerStats.map(getPlayerData);
+        Promise.all(playerDataPromises)
+            .then((updatedPlayers) => {
+                newMatch.playerStats = updatedPlayers.filter((player) => player !== null);
+                res.json({ foundMatch: newMatch });
+            })
+            .catch((error) => {
+                console.error('An error occurred:', error);
+                res.status(500).json({ error: 'An error occurred' });
+            });
     } else {
         return res.status(404).json({ error: 'Game data does not exist' });
     }
 });
+
+const getPlayerData = async (player) => {
+    try {
+        const [data] = await getSteamUserData(player.steamId);
+        player.name = data.personaname;
+        player.imageUrl = data.avatar;
+        return player;
+    } catch (error) {
+        console.error(`Error fetching data for player ${player.steamId}: ${error}`);
+        return player;
+    }
+};
+
+async function getSteamUserData(steamId) {
+    const url = process.env.STEAM_URL + process.env.STEAM_AUTH_KEY + "&format=json&steamids=" + steamId;
+    var response = await fetch(url, {
+        method: 'GET'
+    });
+    var resp = await response.json();
+    return resp.response.players;
+}
 
 module.exports = router;
