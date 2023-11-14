@@ -128,7 +128,7 @@ user.on('steamGuard', (domain, callback) => {
 //PROD
 app.use(
     cors({
-        origin: 'https://debils.gay',
+        origin: ['https://debils.gay', 'https://csstats.vercel.app'],
         optionsSuccessStatus: 200
     })
 );
