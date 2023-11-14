@@ -388,9 +388,9 @@ function getDataForPlayer(demoPath, steamId, name, team) {
 
     //console.log("Player HLTV 2.0 Rating: " + name + " : " + HLTV20);
 
-    player.hltv2 = HLTV20;
-    player.multikillRounds = multikills;
-    player.openingKills = opening_kills;
+    playerStats.hltv2 = HLTV20;
+    playerStats.multikillRounds = multikills;
+    playerStats.openingKills = opening_kills;
 
     //Add
     //Game type? ar machmaking ar competetive? Ar dabar visur pagal damage vieta skaiciuoja?
