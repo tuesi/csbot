@@ -36,8 +36,6 @@ async function sendCsMatchDetails(details) {
             },
             body: JSON.stringify(resolvedDetails)
         });
-
-        console.log(response);
         if (response.status === 403) {
             await getApiToken();
             await sendCsMatchDetails(details);
@@ -64,8 +62,6 @@ async function sendCsVacBanDetails(details) {
             },
             body: JSON.stringify(resolvedDetails)
         });
-
-        console.log(response);
         if (response.status === 403) {
             await getApiToken();
             await sendCsVacBanDetails(details);

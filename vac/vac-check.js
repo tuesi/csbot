@@ -23,8 +23,9 @@ async function checkForVacBans() {
                         }
                     }
                     await match.save();
-                    var vacReport = new VacReport(match, vacIds);
-                    console.log(vacReport);
+                    const vacMach = JSON.parse(JSON.stringify(match));
+                    vacMach.gameId = match._id;
+                    var vacReport = new VacReport(vacMach, vacIds);
                     await jimmy.sendCsVacBanDetails(vacReport);
                 }
             }
