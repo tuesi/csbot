@@ -66,7 +66,7 @@ async function checkForNewGames() {
 
 //5 minutes
 //UNCOMMENT
-//setInterval(checkForNewGames, 300000);
+setInterval(checkForNewGames, 300000);
 
 
 //how to create replay demo file url
