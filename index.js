@@ -52,7 +52,7 @@ csgo.on('connectedToGC', () => {
 
     //CSGO-WETqC-mumcv-tBMFR-E437W-TGwPB  GAME WITH CHICKENS
 
-    //csgo.requestGame("CSGO-WETqC-mumcv-tBMFR-E437W-TGwPB");
+    //csgo.requestGame("CSGO-9u6yK-qQAZu-KOtun-n84xK-c84VH");
 });
 
 async function checkForNewGames() {

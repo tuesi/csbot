@@ -148,9 +148,19 @@ function getDataForPlayer(demoPath, steamId, name, team) {
     let teamFlash = flashNoWarmup.filter(fl => fl.attacker_team_name == fl.user_team_name);
     let userTeamFlash = teamFlash.filter(fl => fl.attacker_steamid == steamId);
 
-    let kills = parseEvent(demoPath, "player_death", ["player_steamid", "active_weapon_name", "item_def_idx"], ["total_rounds_played", "is_warmup_period"]);
-    let deagleKills = kills.filter(kill => kill.attacker_item_def_idx == 1 && kill.headshot == true);
+    let kills = parseEvent(demoPath, "player_death", ["player_steamid", "active_weapon_name", "active_weapon", "item_def_idx"], ["total_rounds_played", "is_warmup_period"]);
+    let killsNoWarmup = kills.filter(fl => fl.is_warmup_period == false);
+    let deagleKills = killsNoWarmup.filter(kill => kill.attacker_item_def_idx == 1 && kill.headshot == true);
     let userDeagleKills = deagleKills.filter(kill => kill.attacker_steamid == steamId);
+
+    let noScopeAwpKills = killsNoWarmup.filter(kill => kill.weapon == "awp" && kill.noscope == true && kill.attacker_steamid == steamId);
+
+    //Do noscore kills
+    //active_weapon is_scoped
+
+    //is_rescuing round_win_reason objective_total
+
+    //shots_fired
 
     var pimpesMentele = false;
 
@@ -161,6 +171,10 @@ function getDataForPlayer(demoPath, steamId, name, team) {
             pimpesMentele = true;
         }
     }
+
+    let playerHurtEvents = parseEvent(demoPath, "player_hurt", ["player_steamid", "active_weapon_name", "item_def_idx"], ["total_rounds_played", "is_warmup_period"]);
+    let heDmg = playerHurtEvents.filter(e => e.weapon == "hegrenade" && e.attacker_steamid == steamId)
+    let molotovDmg = playerHurtEvents.filter(e => (e.weapon == "molotov" || e.weapon == "inferno") && e.attacker_steamid == steamId);
 
     var playerStats = new PlayerStat();
 
@@ -190,6 +204,8 @@ function getDataForPlayer(demoPath, steamId, name, team) {
     playerStats.rankOld = userScore[0].rank_old;
     playerStats.rankChange = userScore[0].rank_change;
     playerStats.chickenKills = chickenKills.length;
+    playerStats.heDmg = heDmg;
+    playerStats.molotovDmg = molotovDmg;
 
 
     //HLTV 2.0

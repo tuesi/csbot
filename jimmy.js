@@ -41,6 +41,7 @@ async function sendCsMatchDetails(details) {
             await sendCsMatchDetails(details);
         }
     } catch {
+        console.log(response);
         console.log('error sending cs data');
     }
 }
