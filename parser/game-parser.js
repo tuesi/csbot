@@ -7,57 +7,6 @@ const MatchDetails = require('../models/match-details');
 async function demofileParse(demoPath) {
     console.log(demoPath);
 
-    //let kills = parseEvent(demoPath, "player_death", ["last_place_name", "team_name"], ["total_rounds_played", "is_warmup_period"])
-
-
-    // Here we could add more filters like weapons and zones etc.
-    // remove team-kills and warmup kills
-    //let killsNoWarmup = kills.filter(kill => kill.is_warmup_period == false)
-    //let filteredKills = killsNoWarmup.filter(kill => kill.attacker_team_name != kill.user_team_name)
-    //let maxRound = Math.max(...kills.map(o => o.total_rounds_played))
-
-
-    // for (let round = 0; round <= maxRound; round++) {
-    //     const killsPerPlayer = {};
-    //     let killsThisRound = filteredKills.filter(kill => kill.total_rounds_played == round)
-    //     killsThisRound.forEach(item => {
-    //         const attackerName = item.attacker_name;
-    //         const kills = killsPerPlayer[attackerName] || 0;
-    //         killsPerPlayer[attackerName] = kills + 1;
-    //     });
-    //console.log("round:", round)
-    //console.log(killsPerPlayer)
-    //}
-    // let event_json = parseEvent(demoPath, "player_death", ["X", "Y"], ["total_rounds_played"]);
-    // let test = parseHeader(demoPath);
-    //let ticks_json = parseTicks("test.dem", ["X", "Y"]);
-    //let demoInfo = parsePlayerInfo(demoPath);
-
-    // let playerDeaths = parseEvent(demoPath, 'player_death', ["last_place_name", "team_name", "player_steamid"], ["total_rounds_played", "is_warmup_period"]);
-    // let playerAssits = parseEvent(demoPath, 'player_hurt', ["last_place_name", "team_name", "player_steamid", "score", "mvps"], ["total_rounds_played", "is_warmup_period"]);
-    // let killsNoWarmup = playerAssits.filter(kill => kill.is_warmup_period == false);
-    // let filteredKills = killsNoWarmup.filter(kill => kill.attacker_steamid == '76561198159334860');
-
-    //console.log(forAssist);
-
-    // let assists = parseEvent(demoPath, 'player_death', ["last_place_name", "team_name", "player_steamid"], ["total_rounds_played", "is_warmup_period"]);
-    // let assistsNoWarmup = assists.filter(kill => kill.is_warmup_period == false);
-    // let userAssists = assistsNoWarmup.filter(kill => kill.assister_steamid == '76561198159334860');
-
-    // console.log("Assists: " + userAssists.length);
-
-    // let kills = parseEvent(demoPath, 'player_death', ["last_place_name", "team_name", "player_steamid"], ["total_rounds_played", "is_warmup_period"]);
-    // let killsNoWarmup = kills.filter(kill => kill.is_warmup_period == false);
-    // let userKills = killsNoWarmup.filter(kill => kill.attacker_steamid == '76561198159334860');
-
-    // console.log("Kills: " + userKills.length);
-
-    // let deaths = parseEvent(demoPath, 'player_death', ["last_place_name", "team_name", "player_steamid"], ["total_rounds_played", "is_warmup_period"]);
-    // let deathsNoWarmup = deaths.filter(kill => kill.is_warmup_period == false);
-    // let userDeaths = deathsNoWarmup.filter(kill => kill.user_steamid == '76561198159334860');
-
-    // console.log("Deaths: " + userDeaths.length);
-
     var matchDetails = new MatchDetails();
     let allPlayerStats = [];
 
@@ -89,19 +38,7 @@ async function demofileParse(demoPath) {
     matchDetails.team1Score = team1WinAmount;
     matchDetails.team2Score = team2WinAmount;
 
-    //console.log(matchDetails);
-
     return matchDetails;
-
-
-
-    //console.log(scores);
-
-    // let endRound = parseEvent(demoPath, 'round_end', ["last_place_name", "team_name", "player_steamid", "score"], ["total_rounds_played", "is_warmup_period", "team_rounds_total"]);
-    // let tWin = endRound.filter(round => round.winner == 2);
-    // let ctWin = endRound.filter(round => round.winner == 3);
-    // console.log("T won: " + tWin.length + " rounds");
-    // console.log("CS won: " + ctWin.length + " rounds");
 
     //winner 2 = terrorist
     //winer 3 = ct
@@ -110,19 +47,9 @@ async function demofileParse(demoPath) {
     //kill.attacker_steamid = kills
 
     //41 points of damage or more for assist
-
-
-    let demo = parseHeader(demoPath);
-    let gameEvents = listGameEvents(demoPath);
-    //console.log(totalAssists);
-    // console.log(score);
-    //console.log(ticks_json);
-    return demo;
 }
 
 function getDataForPlayer(demoPath, steamId, name, team) {
-
-    //console.log(name);
 
     let events = parseEvent(demoPath, "other_death");
     let chickenKills = events.filter(event => event.othertype == "chicken" && event.attacker_steamid == steamId);
@@ -148,15 +75,12 @@ function getDataForPlayer(demoPath, steamId, name, team) {
     let teamFlash = flashNoWarmup.filter(fl => fl.attacker_team_name == fl.user_team_name);
     let userTeamFlash = teamFlash.filter(fl => fl.attacker_steamid == steamId);
 
-    let kills = parseEvent(demoPath, "player_death", ["player_steamid", "active_weapon_name", "active_weapon", "item_def_idx"], ["total_rounds_played", "is_warmup_period"]);
+    let kills = parseEvent(demoPath, "player_death", ["player_steamid", "active_weapon_name", "active_weapon", "item_def_idx", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name"]);
     let killsNoWarmup = kills.filter(fl => fl.is_warmup_period == false);
     let deagleKills = killsNoWarmup.filter(kill => kill.attacker_item_def_idx == 1 && kill.headshot == true);
     let userDeagleKills = deagleKills.filter(kill => kill.attacker_steamid == steamId);
 
     let noScopeAwpKills = killsNoWarmup.filter(kill => kill.weapon == "awp" && kill.noscope == true && kill.attacker_steamid == steamId);
-
-    //Do noscore kills
-    //active_weapon is_scoped
 
     //is_rescuing round_win_reason objective_total
 
@@ -221,23 +145,16 @@ function getDataForPlayer(demoPath, steamId, name, team) {
 
 
     //HLTV 2.0
-
-    var trades = parseEvent(demoPath, "player_death", ["player_steamid", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name"]);
-    var tradesNoWarmup = trades.filter(trade => trade.is_warmup_period == false);
-    var enemyKills = tradesNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.user_team_num == team);
-    var playerKills = tradesNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.attacker_steamid == steamId);
-
-    //console.log(trades);
+    var enemyKills = killsNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.user_team_num == team);
+    var playerKills = killsNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.attacker_steamid == steamId);
 
     var roundEnd = parseEvent(demoPath, "round_end", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
-
-    //console.log(roundEnd);
 
     var roundEndInTeamWin = roundEnd.filter(round => round.winner == team);
     //round.attacker_steamid == null to account for cluches where dead by c4
 
     //TODO Also filter wins where hostage been rescued 
-    var playerAliveEvents = trades.filter(round => round.user_steamid != steamId || round.attacker_steamid == null);
+    var playerAliveEvents = killsNoWarmup.filter(round => round.user_steamid != steamId || round.attacker_steamid == null);
 
     var allWinningRoundEvents = [];
 
@@ -246,29 +163,7 @@ function getDataForPlayer(demoPath, steamId, name, team) {
         allWinningRoundEvents.push(...winRoundEvents);
     });
 
-    //console.log(allWinningRoundEvents);
-
-    //TODO maybe get player cound by getting player_hurt event?
-
     var playersEachRound = parseEvent(demoPath, "player_spawn", ["player_steamid", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
-
-    // for (let round = 0; round <= maxRound; round++) {
-    //     console.log("ROUND: " + round);
-    //     const enemyPlayers = new Set();
-    //     const teamPlayers = new Set();
-    //     //get player count each round
-    //     var currentRound = playersEachRound.filter(winRound => winRound.total_rounds_played == round);
-    //     currentRound.forEach(event => {
-    //         if (event.user_team_num === team) {
-    //             teamPlayers.add(event.user_steamid);
-    //         }
-    //         if (event.user_team_num !== team) {
-    //             enemyPlayers.add(event.user_steamid);
-    //         }
-    //     });
-    //     console.log(teamPlayers.size);
-    //     console.log(enemyPlayers.size);
-    // }
 
     var playerClutchRounds = 0;
 
@@ -326,8 +221,8 @@ function getDataForPlayer(demoPath, steamId, name, team) {
 
 
 
-    //var test = parseEvent(demoPath, "hostage_rescued", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
-    //console.log(test);
+    var test = parseEvent(demoPath, "hostage_rescued", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
+    console.log(test);
     //console.log(allWinningRoundEvents);
 
     // var filterTeamWinRounds = trades.filter(action => {
@@ -348,7 +243,7 @@ function getDataForPlayer(demoPath, steamId, name, team) {
     var multikills = 0;
     var opening_kills = 0;
 
-    var playerTeamKills = tradesNoWarmup.filter(trade => trade.attacker_team_num == trade.user_team_num && trade.attacker_steamid == steamId);
+    var playerTeamKills = killsNoWarmup.filter(trade => trade.attacker_team_num == trade.user_team_num && trade.attacker_steamid == steamId);
 
     for (let round = 0; round <= maxRound; round++) {
 
@@ -369,14 +264,14 @@ function getDataForPlayer(demoPath, steamId, name, team) {
             kill = true;
         }
 
-        var playerAssists = tradesNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.assister_steamid == steamId);
+        var playerAssists = killsNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.assister_steamid == steamId);
 
         if (playerAssists.some(trade => trade.total_rounds_played === round)) {
             playerAssistsRounds++;
             assist = true;
         }
 
-        var palyerDeaths = tradesNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.user_steamid == steamId);
+        var palyerDeaths = killsNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.user_steamid == steamId);
 
         if (!palyerDeaths.some(death => death.total_rounds_played === round)) {
             survive = true;
@@ -390,7 +285,7 @@ function getDataForPlayer(demoPath, steamId, name, team) {
             multikills++;
         }
 
-        var currentRound = trades.filter(kill => kill.total_rounds_played === round);
+        var currentRound = killsNoWarmup.filter(kill => kill.total_rounds_played === round);
         let lowestTickKill = Math.min(...currentRound.map(o => o.tick));
 
         if (currentRound.filter(kill => kill.tick == lowestTickKill && kill.attacker_steamid == steamId).length > 0) {
@@ -424,21 +319,6 @@ function getDataForPlayer(demoPath, steamId, name, team) {
     //Game type? ar machmaking ar competetive? Ar dabar visur pagal damage vieta skaiciuoja?
 
     return playerStats;
-
-    console.log("Kills: " + userScore[0].user_kills_total);
-    console.log("Deaths: " + userScore[0].user_deaths_total);
-    console.log("Assists: " + userScore[0].user_assists_total);
-    console.log("Total cash spend: " + userScore[0].user_total_cash_spent);
-    console.log("Total damage: " + userScore[0].user_damage_total);
-    console.log("Total utility damage: " + userScore[0].user_utility_damage_total);
-    console.log("Total enemies flashed: " + userScore[0].user_enemies_flashed_total);
-    console.log("Total headshot count: " + userScore[0].user_headshot_kills_total);
-    console.log("Number of total current map wins: " + userScore[0].num_wins);
-    console.log("Cash spent: " + userScore[0].user_total_cash_spent);
-    console.log("Score: " + userScore[0].user_score);
-    console.log("ADR: " + Math.round(userScore[0].user_damage_total / maxRound));
-    console.log((userTeam == "TERRORIST" && TWinAmount > CTWinAmount || userTeam == "CT" && CTWinAmount > TWinAmount) ? "Match win result " + CTWinAmount + ":" + TWinAmount : "Match lost result " + CTWinAmount + ":" + TWinAmount);
-
 }
 
 module.exports = { demofileParse };

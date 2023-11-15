@@ -44,8 +44,8 @@ async function getDemoFile(matchId, demoUrl, retries = 3, delay = 60000) {
                 } catch (error) {
                     console.error('Error making HTTP request:', error);
                     if (retriesLeft > 0) {
-                        console.log(`Retrying... ${retriesLeft} attempts left.`);
-                        setTimeout(makeRequest, delay);
+                        await new Promise((resolve) => setTimeout(resolve, delay));
+                        makeRequest(retriesLeft - 1);  // Decrement retriesLeft
                     } else {
                         reject(new Error('Exhausted retries'));
                     }

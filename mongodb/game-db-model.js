@@ -5,6 +5,7 @@ const gameDataSchema = new mongoose.Schema({
     team1Score: Number,
     team2Score: Number,
     gameDate: Date,
+    matchId: String,
     playerStats: [
         {
             vac: { type: Boolean, default: false },

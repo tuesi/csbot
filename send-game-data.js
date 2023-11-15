@@ -7,6 +7,7 @@ const jimmyApi = require('./jimmy');
 async function send(matchId, data) {
     const users = await User.find({ matchId: matchId, lastMatchDataSend: false }).exec();
     //const users = await User.find().exec();
+    const lastMatchId = users[0].lastMatchId;
     for (const user of users) {
         // Update lastMatchDataSend to true
         user.lastMatchDataSend = true;
@@ -20,7 +21,7 @@ async function send(matchId, data) {
         }
     }
 
-    const gameId = await saveGameData(data);
+    const gameId = await saveGameData(data, lastMatchId);
 
     data.gameId = gameId.toString();
 
@@ -50,8 +51,9 @@ async function send(matchId, data) {
     });
 }
 
-async function saveGameData(data) {
+async function saveGameData(data, matchId) {
     data.gameDate = new Date();
+    data.matchId = matchId;
     const gameData = new GameData(data);
     try {
         const savedData = await gameData.save();
