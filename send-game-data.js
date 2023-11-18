@@ -55,15 +55,20 @@ async function send(matchId, data) {
 }
 
 async function saveGameData(data, matchId) {
-    data.gameDate = new Date();
-    data.matchId = matchId;
-    const gameData = new GameData(data);
-    try {
-        const savedData = await gameData.save();
-        return savedData._id;
-    } catch (error) {
-        console.log(error);
-        console.log("error saving game data");
+    const game = await GameData.find({ matchId: matchId }).exec();
+    if (game.length == 0) {
+        data.gameDate = new Date();
+        data.matchId = matchId;
+        const gameData = new GameData(data);
+        try {
+            const savedData = await gameData.save();
+            return savedData._id;
+        } catch (error) {
+            console.log(error);
+            console.log("error saving game data");
+        }
+    } else {
+        return game._id;
     }
 }
 

@@ -21,8 +21,7 @@ async function demofileParse(demoPath) {
     //console.log(events);
 
     let other_death = parseEvent(demoPath, "other_death");
-    let mvps = parseEvent(demoPath, 'round_mvp', ["player_steamid"], ["total_rounds_played"]);
-    let scores = parseEvent(demoPath, 'rank_update', ["team_name", "player_steamid", "score", "total_cash_spent", "kills_total", "deaths_total", "assists_total", "headshot_kills_total", "damage_total", "utility_damage_total", "enemies_flashed_total", "team_rounds_total", "ace_rounds_total", "4k_rounds_total", "3k_rounds_total"]);
+    let scores = parseEvent(demoPath, 'rank_update', ["team_name", "mvps", "player_steamid", "score", "total_cash_spent", "kills_total", "deaths_total", "assists_total", "headshot_kills_total", "damage_total", "utility_damage_total", "enemies_flashed_total", "team_rounds_total", "ace_rounds_total", "4k_rounds_total", "3k_rounds_total"]);
     let flash = parseEvent(demoPath, 'player_blind', ["team_name"], ["is_warmup_period"]);
     let kills = parseEvent(demoPath, "player_death", ["player_steamid", "active_weapon_name", "active_weapon", "item_def_idx", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name"]);
     let playerHurtEvents = parseEvent(demoPath, "player_hurt", ["player_steamid", "active_weapon_name", "item_def_idx"], ["total_rounds_played", "is_warmup_period"]);
@@ -30,7 +29,7 @@ async function demofileParse(demoPath) {
     var playersEachRound = parseEvent(demoPath, "player_spawn", ["player_steamid", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
 
     players.forEach(player => {
-        allPlayerStats.push(getDataForPlayer(demoPath, player.steamid, player.name, player.team_number, other_death, mvps, scores, flash, kills, playerHurtEvents, roundEnd, playersEachRound));
+        allPlayerStats.push(getDataForPlayer(player.steamid, player.name, player.team_number, other_death, scores, flash, kills, playerHurtEvents, roundEnd, playersEachRound));
     });
     matchDetails.playerStats = allPlayerStats;
 
@@ -54,15 +53,12 @@ async function demofileParse(demoPath) {
     //41 points of damage or more for assist
 }
 
-function getDataForPlayer(demoPath, steamId, name, team, other_death, mvps, scores, flash, kills, playerHurtEvents, roundEnd, playersEachRound) {
+function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills, playerHurtEvents, roundEnd, playersEachRound) {
 
     //OTHER _DEATH
     //ADD NO WARMUP
     let other_deathNoWarmUp = other_death.filter(other => other.is_warmup_period == false);
     let chickenKills = other_deathNoWarmUp.filter(event => event.othertype == "chicken" && event.attacker_steamid == steamId);
-
-    //MVP
-    let allMvps = mvps.filter(mvp => mvp.user_steamid == steamId);
 
     //SCORES
     let userScore = scores.filter(score => score.user_steamid == steamId);
@@ -98,7 +94,6 @@ function getDataForPlayer(demoPath, steamId, name, team, other_death, mvps, scor
     for (let round = 0; round <= maxRound; round++) {
         var roundKills = userDeagleKills.filter(kill => kill.total_rounds_played == round);
         if (roundKills.length >= 4) {
-            console.log(roundKills);
             pimpesMentele = true;
         }
     }
@@ -123,7 +118,7 @@ function getDataForPlayer(demoPath, steamId, name, team, other_death, mvps, scor
 
     playerStats.steamId = steamId;
     playerStats.name = name;
-    playerStats.mvps = allMvps.length;
+    playerStats.mvps = userScore[0].user_mvps;
     playerStats.kills = userScore[0].user_kills_total;
     playerStats.deaths = userScore[0].user_deaths_total;
     playerStats.assists = userScore[0].user_assists_total;
