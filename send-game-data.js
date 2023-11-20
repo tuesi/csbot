@@ -68,7 +68,7 @@ async function saveGameData(data, matchId) {
             console.log("error saving game data");
         }
     } else {
-        return game._id;
+        return game[0]._id;
     }
 }
 

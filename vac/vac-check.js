@@ -4,6 +4,7 @@ const GameData = require('../mongodb/game-db-model');
 const jimmy = require('../jimmy');
 
 async function checkForVacBans() {
+    console.log("vac check");
     const foundMatch = await GameData.find().exec();
     if (foundMatch.length > 0) {
         foundMatch.forEach(async match => {

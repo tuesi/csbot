@@ -71,7 +71,7 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
 
     let userTeam = userScore[0].user_team_name;
 
-    let maxRound = Math.max(...mvps.map(o => o.total_rounds_played))
+    let maxRound = Math.max(...roundEnd.map(o => o.total_rounds_played));
 
     //FLASH
     let flashNoWarmup = flash.filter(fl => fl.is_warmup_period == false);
