@@ -9,7 +9,6 @@ async function makeAPICallWithCode(steamId, authId, matchId) {
     try {
         const response = await axios.get(`https://api.steampowered.com/ICSGOPlayers_730/GetNextMatchSharingCode/v1?key=${process.env.STEAM_AUTH_KEY}&steamid=${steamId}&steamidkey=${authId}&knowncode=${matchId}`);
         const data = response.data;
-        console.log(data);
         // Check if there is a "nextcode" in the response
 
         //{ result: { nextcode: 'n/a' } }

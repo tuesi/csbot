@@ -5,13 +5,13 @@ const PlayerStat = require('../models/user-game-data');
 const MatchDetails = require('../models/match-details');
 
 async function demofileParse(demoPath) {
-    console.log(demoPath);
+    //console.log(demoPath);
 
     var matchDetails = new MatchDetails();
     let allPlayerStats = [];
 
     let header = parseHeader(demoPath);
-    console.log(header);
+    //console.log(header);
     matchDetails.map = header.map_name;
     console.log(header.map_name);
 

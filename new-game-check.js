@@ -12,16 +12,11 @@ async function checkIfNewGamesAvailable() {
 
         // Iterate through each user
         for (const user of users) {
-            console.log(user.steamId);
-            console.log(user.matchAuthId);
-            console.log(user.lastMatchId);
             // Perform the getMatch operation on the user's data
             const latestGameCode = await getGameCode.makeAPICallWithCode(user.steamId, user.matchAuthId, user.lastMatchId);
-            console.log(latestGameCode);
 
             // Handle the result (latestGameCode) as needed
             if (latestGameCode !== user.lastMatchId && latestGameCode != null) {
-                console.log(latestGameCode);
                 console.log(`New game detected for ${user.discordId}`);
 
                 var matchId = await getMatchid.getMatchId(latestGameCode);
