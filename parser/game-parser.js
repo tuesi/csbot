@@ -314,7 +314,7 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
 
     //console.log("Player HLTV 2.0 Rating: " + name + " : " + HLTV20);
 
-    playerStats.hltv2 = HLTV20;
+    playerStats.hltv2 = parseFloat(HLTV20.toFixed(2));
     playerStats.multikillRounds = multikills;
     playerStats.openingKills = opening_kills;
 
