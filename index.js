@@ -51,8 +51,9 @@ csgo.on('connectedToGC', () => {
     console.log('Connected to CS:GO Game Coordinator (GC)');
 
     //CSGO-WETqC-mumcv-tBMFR-E437W-TGwPB  GAME WITH CHICKENS
+    //CSGO-OYkmR-mo9fN-MCCt7-YtphP-LwSOG GAME WITH HOSTAGE RESCUE
 
-    //csgo.requestGame("CSGO-CAURz-FrAct-YLMfQ-3svFw-YrJTK");
+    //csgo.requestGame("CSGO-OYkmR-mo9fN-MCCt7-YtphP-LwSOG");
 });
 
 async function checkForNewGames() {

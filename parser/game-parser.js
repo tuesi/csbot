@@ -5,52 +5,58 @@ const PlayerStat = require('../models/user-game-data');
 const MatchDetails = require('../models/match-details');
 
 async function demofileParse(demoPath) {
-    //console.log(demoPath);
+    try {
+        //console.log(demoPath);
 
-    var matchDetails = new MatchDetails();
-    let allPlayerStats = [];
+        var matchDetails = new MatchDetails();
+        let allPlayerStats = [];
 
-    let header = parseHeader(demoPath);
-    //console.log(header);
-    matchDetails.map = header.map_name;
-    console.log(header.map_name);
+        let header = parseHeader(demoPath);
+        //console.log(header);
+        matchDetails.map = header.map_name;
+        console.log(header.map_name);
 
-    let players = parsePlayerInfo(demoPath);
+        let players = parsePlayerInfo(demoPath);
 
-    let events = listGameEvents(demoPath);
-    //console.log(events);
+        let events = listGameEvents(demoPath);
+        //console.log(events);
 
-    let other_death = parseEvent(demoPath, "other_death");
-    let scores = parseEvent(demoPath, 'rank_update', ["team_name", "mvps", "player_steamid", "score", "total_cash_spent", "kills_total", "deaths_total", "assists_total", "headshot_kills_total", "damage_total", "utility_damage_total", "enemies_flashed_total", "team_rounds_total", "ace_rounds_total", "4k_rounds_total", "3k_rounds_total"]);
-    let flash = parseEvent(demoPath, 'player_blind', ["team_name"], ["is_warmup_period"]);
-    let kills = parseEvent(demoPath, "player_death", ["player_steamid", "active_weapon_name", "active_weapon", "item_def_idx", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name"]);
-    let playerHurtEvents = parseEvent(demoPath, "player_hurt", ["player_steamid", "active_weapon_name", "item_def_idx"], ["total_rounds_played", "is_warmup_period"]);
-    var roundEnd = parseEvent(demoPath, "round_end", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
-    var playersEachRound = parseEvent(demoPath, "player_spawn", ["player_steamid", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
+        let other_death = parseEvent(demoPath, "other_death");
+        let scores = parseEvent(demoPath, 'rank_update', ["team_name", "mvps", "player_steamid", "score", "total_cash_spent", "kills_total", "deaths_total", "assists_total", "headshot_kills_total", "damage_total", "utility_damage_total", "enemies_flashed_total", "team_rounds_total", "ace_rounds_total", "4k_rounds_total", "3k_rounds_total"]);
+        let flash = parseEvent(demoPath, 'player_blind', ["team_name"], ["is_warmup_period"]);
+        let kills = parseEvent(demoPath, "player_death", ["player_steamid", "active_weapon_name", "active_weapon", "item_def_idx", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name"]);
+        let playerHurtEvents = parseEvent(demoPath, "player_hurt", ["player_steamid", "active_weapon_name", "item_def_idx"], ["total_rounds_played", "is_warmup_period"]);
+        var roundEnd = parseEvent(demoPath, "round_end", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t", "is_rescuing", "round_win_reason", "objective_total"]);
+        var playersEachRound = parseEvent(demoPath, "player_spawn", ["player_steamid", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
+        //var hostage = parseEvent(demoPath, "hostage_rescued", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
 
-    players.forEach(player => {
-        allPlayerStats.push(getDataForPlayer(player.steamid, player.name, player.team_number, other_death, scores, flash, kills, playerHurtEvents, roundEnd, playersEachRound));
-    });
-    matchDetails.playerStats = allPlayerStats;
+        players.forEach(player => {
+            allPlayerStats.push(getDataForPlayer(player.steamid, player.name, player.team_number, other_death, scores, flash, kills, playerHurtEvents, roundEnd, playersEachRound));
+        });
+        matchDetails.playerStats = allPlayerStats;
 
-    let CT = scores.filter(score => score.user_team_name == "CT");
-    let T = scores.filter(score => score.user_team_name == "TERRORIST");
+        let CT = scores.filter(score => score.user_team_name == "CT");
+        let T = scores.filter(score => score.user_team_name == "TERRORIST");
 
-    let team1WinAmount = CT[0].user_team_rounds_total;
-    let team2WinAmount = T[0].user_team_rounds_total;
+        let team1WinAmount = CT[0].user_team_rounds_total;
+        let team2WinAmount = T[0].user_team_rounds_total;
 
-    matchDetails.team1Score = team1WinAmount;
-    matchDetails.team2Score = team2WinAmount;
+        matchDetails.team1Score = team1WinAmount;
+        matchDetails.team2Score = team2WinAmount;
 
-    return matchDetails;
+        return matchDetails;
 
-    //winner 2 = terrorist
-    //winer 3 = ct
+        //winner 2 = terrorist
+        //winer 3 = ct
 
-    //kill.user_steamId = deaths
-    //kill.attacker_steamid = kills
+        //kill.user_steamId = deaths
+        //kill.attacker_steamid = kills
 
-    //41 points of damage or more for assist
+        //41 points of damage or more for assist
+    } catch (error) {
+        console.log(error);
+        console.log('parsing error');
+    }
 }
 
 function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills, playerHurtEvents, roundEnd, playersEachRound) {
@@ -129,11 +135,15 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
     playerStats.totalHeadshotCount = userScore[0].user_headshot_kills_total;
     playerStats.totalCurrentMapWins = userScore[0].num_wins;
     playerStats.score = userScore[0].user_score;
-    playerStats.adr = Math.round(userScore[0].user_damage_total / maxRound);
+    playerStats.adr = userScore[0].user_damage_total > 0 ? Math.round(userScore[0].user_damage_total / maxRound) : 0;
     playerStats.totalAce = userScore[0].user_ace_rounds_total;
     playerStats.total4kills = userScore[0].user_4k_rounds_total;
     playerStats.total3kills = userScore[0].user_3k_rounds_total;
-    playerStats.headshotPercentage = Math.round((userScore[0].user_headshot_kills_total / userScore[0].user_kills_total) * 100);
+    if (userScore[0].user_headshot_kills_total > 0 && userScore[0].user_kills_total > 0) {
+        playerStats.headshotPercentage = Math.round((userScore[0].user_headshot_kills_total / userScore[0].user_kills_total) * 100);
+    } else {
+        playerStats.headshotPercentage = 0;
+    }
     playerStats.teamFlash = userTeamFlash.length;
     playerStats.pimpesMentele = pimpesMentele;
     playerStats.team = team;
@@ -224,8 +234,9 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
 
 
 
-    //var test = parseEvent(demoPath, "hostage_rescued", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
-    //console.log(test);
+    //HOSTAGE
+    //console.log(hostage);
+    //console.log(roundEnd);
     //console.log(allWinningRoundEvents);
 
     // var filterTeamWinRounds = trades.filter(action => {
@@ -297,7 +308,7 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
 
     }
 
-    var playerAssitsPerRound = userScore[0].user_assists_total / maxRound;
+    var playerAssitsPerRound = userScore[0].user_assists_total > 0 ? userScore[0].user_assists_total / maxRound : 0;
 
     //console.log("Round KAST: " + roundsCountToKAST);
     //console.log("Max round:" + maxRound);
