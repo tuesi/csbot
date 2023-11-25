@@ -2,6 +2,7 @@ const axios = require('axios');
 const fs = require('fs');
 const unbzip2 = require('unbzip2-stream');
 
+//delay 60000
 async function getDemoFile(matchId, demoUrl, retries = 3, delay = 60000) {
     console.log('get demo');
     const localDemoBz2FilePath = `currentDemo${matchId}.dem.bz2`;
@@ -9,7 +10,7 @@ async function getDemoFile(matchId, demoUrl, retries = 3, delay = 60000) {
 
     function attemptRequest(retriesLeft) {
         return new Promise((resolve, reject) => {
-            const makeRequest = async () => {
+            const makeRequest = async (retriesLeft) => {
                 try {
                     const response = await axios({
                         method: 'get',
@@ -44,15 +45,16 @@ async function getDemoFile(matchId, demoUrl, retries = 3, delay = 60000) {
                 } catch (error) {
                     console.error('Error making HTTP request:', error);
                     if (retriesLeft > 0) {
+                        console.log(retriesLeft - 1 + " RETRIES LEFT");
                         await new Promise((resolve) => setTimeout(resolve, delay));
-                        makeRequest(retriesLeft - 1);  // Decrement retriesLeft
+                        return makeRequest(retriesLeft - 1);  // Decrement retriesLeft
                     } else {
                         reject(new Error('Exhausted retries'));
                     }
                 }
             };
 
-            makeRequest();
+            return makeRequest(retriesLeft);
         });
     }
 

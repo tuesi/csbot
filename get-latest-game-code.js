@@ -21,7 +21,7 @@ async function makeAPICallWithCode(steamId, authId, matchId) {
         } else if (data.status === 412) {
             return null;
         } else {
-            console.log('returning' + matchId);
+            //console.log('returning' + matchId);
             return matchId;
         }
     } catch (error) {

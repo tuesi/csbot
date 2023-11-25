@@ -19,6 +19,8 @@ const sendGameData = require('./send-game-data');
 
 const vacReport = require('./vac/vac-check');
 
+const defaultDataParser = require('./parser/default-data-parser');
+
 let user = new SteamUser();
 const community = new SteamCommunity();
 let csgo = new GlobalOffensive(user);
@@ -53,7 +55,7 @@ csgo.on('connectedToGC', () => {
     //CSGO-WETqC-mumcv-tBMFR-E437W-TGwPB  GAME WITH CHICKENS
     //CSGO-OYkmR-mo9fN-MCCt7-YtphP-LwSOG GAME WITH HOSTAGE RESCUE
 
-    //csgo.requestGame("CSGO-OYkmR-mo9fN-MCCt7-YtphP-LwSOG");
+    //csgo.requestGame("CSGO-iXMKW-AsLYL-AQVoW-pjGE8-PBdqA");
 });
 
 async function checkForNewGames() {
@@ -83,6 +85,7 @@ cron.schedule('*/5 * * * *', checkForNewGames);
 //http://replay181.valve.net/730/003636589152151011577_1693418786.dem.bz2
 
 csgo.on('matchList', async (matchData, data) => {
+    var defaultGameData = defaultDataParser.defaultDataParser(matchData);
     if (matchData && matchData.length > 0) {
         for (const element of matchData[0].roundstatsall) {
             if (element.map) {
@@ -92,6 +95,10 @@ csgo.on('matchList', async (matchData, data) => {
                             var data = await gameParser.demofileParse(demoPath);
                             sendGameData.send(matchData[0].matchid, data);
                         }
+                    })
+                    .catch((error) => {
+                        console.log('unable to download game data');
+                        sendGameData.send(matchData[0].matchid, defaultGameData);
                     })
                 break;
             }

@@ -72,6 +72,19 @@ async function saveGameData(data, matchId) {
     } else {
         return game[0]._id;
     }
+
+    //FOR TESTING
+    // console.log('new game saving');
+    // data.gameDate = new Date();
+    // data.matchId = matchId;
+    // const gameData = new GameData(data);
+    // try {
+    //     const savedData = await gameData.save();
+    //     return savedData._id;
+    // } catch (error) {
+    //     console.log(error);
+    //     console.log("error saving game data");
+    // }
 }
 
 module.exports = { send }

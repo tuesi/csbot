@@ -18,7 +18,7 @@ async function demofileParse(demoPath) {
 
         let players = parsePlayerInfo(demoPath);
 
-        let events = listGameEvents(demoPath);
+        //let events = listGameEvents(demoPath);
         //console.log(events);
 
         let other_death = parseEvent(demoPath, "other_death");
