@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const loginData = { username: process.env.API_USERNAME, password: process.env.API_PASSWORD };
 
 var token;
+let retryWithNewToken = false;
 
 async function getApiToken() {
     const tokenResponse = await fetch(process.env.JIMMY_URL + "v1/auth/login", {
@@ -36,10 +37,18 @@ async function sendCsMatchDetails(details) {
             body: JSON.stringify(resolvedDetails)
         });
         console.log(response);
-        if (response.status === 403) {
-            await getApiToken();
-            await sendCsMatchDetails(details);
+        if (response.status === 403 || response.status === 500) {
+            // Retry with a new token only once
+            if (!retryWithNewToken) {
+                console.error('Token issue detected. Attempting to refresh token and retrying.');
+                retryWithNewToken = true;
+                await getApiToken();
+                await sendCsMatchDetails(details);
+            } else {
+                console.error('Retry with new token already attempted. Not retrying again.');
+            }
         }
+        retryWithNewToken = false;
     } catch {
         console.log(response);
         console.log('error sending cs data');
