@@ -55,7 +55,7 @@ csgo.on('connectedToGC', () => {
     //CSGO-WETqC-mumcv-tBMFR-E437W-TGwPB  GAME WITH CHICKENS
     //CSGO-OYkmR-mo9fN-MCCt7-YtphP-LwSOG GAME WITH HOSTAGE RESCUE
 
-    //csgo.requestGame("CSGO-iXMKW-AsLYL-AQVoW-pjGE8-PBdqA");
+    //csgo.requestGame("CSGO-OYkmR-mo9fN-MCCt7-YtphP-LwSOG");
 });
 
 async function checkForNewGames() {

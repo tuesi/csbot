@@ -17,7 +17,7 @@ async function checkForVacBans() {
             if (steamIds.length > 0) {
                 var url = process.env.VAC_BAN_URL + process.env.STEAM_AUTH_KEY + "&steamids=" + steamIds;
                 var vacIds = await checkPlayerBans(url);
-                if (vacIds.length > 0) {
+                if (vacIds && vacIds.length > 0) {
                     for (const player of match.playerStats) {
                         if (vacIds.includes(player.steamId)) {
                             player.vac = true;

@@ -28,7 +28,7 @@ async function demofileParse(demoPath) {
         let playerHurtEvents = parseEvent(demoPath, "player_hurt", ["player_steamid", "active_weapon_name", "item_def_idx"], ["total_rounds_played", "is_warmup_period"]);
         var roundEnd = parseEvent(demoPath, "round_end", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t", "is_rescuing", "round_win_reason", "objective_total"]);
         var playersEachRound = parseEvent(demoPath, "player_spawn", ["player_steamid", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
-        //var hostage = parseEvent(demoPath, "hostage_rescued", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
+        //var hostage = parseEvent(demoPath, "hostage_rescued", ["player_steamid", "time"], ["total_rounds_played", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
 
         players.forEach(player => {
             allPlayerStats.push(getDataForPlayer(player.steamid, player.name, player.team_number, other_death, scores, flash, kills, playerHurtEvents, roundEnd, playersEachRound));
