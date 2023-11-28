@@ -146,7 +146,7 @@ app.use(
 
 
 //UNCOMMENT WHEN CAN CHECK START
-cron.schedule('0 8 * * *', () => { vacReport.checkForVacBans() });
+cron.schedule('0 6 * * *', () => { vacReport.checkForVacBans() });
 
 //cron.schedule('* * * * *', () => { vacReport.checkForVacBans() });
 
