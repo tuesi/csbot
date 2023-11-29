@@ -13,6 +13,7 @@ async function getApiToken() {
         body: JSON.stringify(loginData)
     });
 
+    console.log(tokenResponse);
     if (tokenResponse.status == 200) {
         const tokenData = await tokenResponse.json();
         token = tokenData.token;
@@ -52,6 +53,7 @@ async function sendCsMatchDetails(details) {
     } catch {
         console.log(response);
         console.log('error sending cs data');
+        retryWithNewToken = false;
     }
 }
 
