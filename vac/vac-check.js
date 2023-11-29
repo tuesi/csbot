@@ -5,9 +5,14 @@ const jimmy = require('../jimmy');
 
 async function checkForVacBans() {
     console.log("vac check");
+    const currectDate = new Date();
     const foundMatch = await GameData.find().exec();
     if (foundMatch.length > 0) {
         foundMatch.forEach(async match => {
+            var daysSinceMatch = 300;
+            if (match.gameDate) {
+                daysSinceMatch = Math.floor((currectDate - match.gameDate) / (1000 * 60 * 60 * 24));
+            }
             var steamIds = [];
             match.playerStats.forEach(async player => {
                 if (player.vac == false) {
@@ -16,7 +21,7 @@ async function checkForVacBans() {
             });
             if (steamIds.length > 0) {
                 var url = process.env.VAC_BAN_URL + process.env.STEAM_AUTH_KEY + "&steamids=" + steamIds;
-                var vacIds = await checkPlayerBans(url);
+                var vacIds = await checkPlayerBans(url, daysSinceMatch);
                 if (vacIds && vacIds.length > 0) {
                     for (const player of match.playerStats) {
                         if (vacIds.includes(player.steamId)) {
@@ -36,7 +41,7 @@ async function checkForVacBans() {
 
 //76561198447475184 ID WITH VAC BAN
 
-async function checkPlayerBans(url) {
+async function checkPlayerBans(url, daysSinceMatch) {
     try {
         const response = await fetch(url, {
             method: 'GET'
@@ -47,7 +52,7 @@ async function checkPlayerBans(url) {
             const vacIds = [];
             if (data && data.players && Array.isArray(data.players)) {
                 data.players.forEach(player => {
-                    if (player.VACBanned) {
+                    if (player.VACBanned && player.DaysSinceLastBan <= daysSinceMatch) {
                         vacIds.push(player.SteamId);
                     }
                 });
