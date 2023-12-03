@@ -83,4 +83,30 @@ async function sendCsVacBanDetails(details) {
     }
 }
 
-module.exports = { sendCsMatchDetails, sendCsVacBanDetails }
+async function sendCsMatchBetDetails(details) {
+
+    if (!token) {
+        await getApiToken();
+    }
+
+    const resolvedDetails = await details;
+
+    try {
+        var response = await fetch(process.env.JIMMY_URL + "v1/cs/game-start", {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(resolvedDetails)
+        });
+        if (response.status === 403) {
+            await getApiToken();
+            await sendCsMatchBetDetails(details);
+        }
+    } catch {
+        console.log('error sending cs data');
+    }
+}
+
+module.exports = { sendCsMatchDetails, sendCsVacBanDetails, sendCsMatchBetDetails }

@@ -18,6 +18,7 @@ const gameParser = require('./parser/game-parser');
 const sendGameData = require('./send-game-data');
 
 const vacReport = require('./vac/vac-check');
+const playerGameStatus = require('./player-game-status/get-player-game-status');
 
 const defaultDataParser = require('./parser/default-data-parser');
 
@@ -36,6 +37,9 @@ user.on('loggedOn', () => {
     user.setPersona(SteamUser.EPersonaState.Online);
 
     user.gamesPlayed([730]);
+
+    //FOR QUICK TESTING. COMMENT WHEN NOT TESTING
+    //playerGameStatus.getPlayerStartedMatch(user);
 });
 
 user.on("friendMessage", function (steamID, message) {
@@ -72,6 +76,20 @@ async function checkForNewGames() {
 // OLD setInterval(checkForNewGames, 300000);
 
 cron.schedule('*/5 * * * *', checkForNewGames);
+
+
+//Get player steam status. (To see if it started the game)
+cron.schedule('*/1 * * * *', () => {
+    playerGameStatus.getPlayerStartedMatch(user);
+});
+
+
+user.on('friendRelationship', (steamID, relationship) => {
+    if (relationship === SteamUser.EFriendRelationship.RequestRecipient) {
+        console.log(`Received friend request from ${steamID}`);
+        user.addFriend(steamID);
+    }
+});
 
 
 //how to create replay demo file url

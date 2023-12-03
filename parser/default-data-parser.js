@@ -3,6 +3,9 @@ const helper = require('./helper');
 const PlayerStat = require('../models/user-game-data');
 const MatchDetails = require('../models/match-details');
 
+//USER FRIENDS
+//https://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=XXX&steamid=XXX&relationship=friend
+
 function defaultDataParser(gameData) {
     var data = gameData[0].roundstatsall;
     var gameInfo = data[[data.length - 1]];
