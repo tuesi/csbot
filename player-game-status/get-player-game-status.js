@@ -15,7 +15,8 @@ async function getPlayerStartedMatch(user) {
 
     //RICH PRESENCE
     user.requestRichPresence(730, steamIds, async (err, data) => {
-        if (data.users) {
+        console.log(data);
+        if (data && data.users) {
             var playingUsers = [];
             const keys = Object.keys(data.users);
             const userArray = Object.values(data.users);
