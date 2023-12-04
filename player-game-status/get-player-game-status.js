@@ -15,7 +15,6 @@ async function getPlayerStartedMatch(user) {
 
     //RICH PRESENCE
     user.requestRichPresence(730, steamIds, async (err, data) => {
-        console.log(data);
         if (data && data.users) {
             var playingUsers = [];
             const keys = Object.keys(data.users);
@@ -38,7 +37,9 @@ async function getPlayerStartedMatch(user) {
                         playingUsers.push(playingUser);
                     }
                 }
-                await jimmy.sendCsMatchBetDetails(playingUsers);
+                if (playingUsers.length > 0) {
+                    await jimmy.sendCsMatchBetDetails(playingUsers);
+                }
             }
         }
     });
