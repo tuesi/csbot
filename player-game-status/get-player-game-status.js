@@ -1,57 +1,45 @@
-
 const PlayingUser = require('../models/playing-user');
 const User = require('../mongodb/user-db-model');
 const jimmy = require('../jimmy');
-const helper = require('../parser/helper');
+
+var steamIds;
 
 async function getPlayerStartedMatch(user) {
 
-    user.getFriendsThatPlay(730, async (err, friendList) => {
+    var allUsers = await User.find().exec();
+    steamIds = allUsers.map(user => user.steamId);
 
-        if (err) {
-            console.error('Error retrieving friends:', err);
-            return;
-        }
+    // user.getPersonas(steamIds, (err, data) => {
+    //     console.log(data);
+    // });
 
-        // Process the list of friends
-        // for (const steamID in friends) {
-        //     const steamId = friends[steamID];
-        //     playersThatPlay.push(steamId);
-        // }
-
-        var friendArray = friendList['friends'];
-        const accountIds = friendArray.map(steamID => steamID.accountid);
-        const steamIds = accountIds.map(id => helper.ToSteamID(id));
-
-        //RICH PRESENCE
-        var allUsers = await User.find().exec();
-        user.requestRichPresence(730, steamIds, async (err, data) => {
-            if (data.users) {
-                var playingUsers = [];
-                const keys = Object.keys(data.users);
-                const userArray = Object.values(data.users);
-                if (userArray.length > 0) {
-                    for (var i = 0; i < userArray.length; i++) {
-                        const richPresence = userArray[i].richPresence;
-                        if (richPresence['system:lock'] === 'mmqueue' && (richPresence['game:score'] === undefined || richPresence['game:score'] === '[ 0 : 0 ]')) {
-                            //is in warup or starting game
-                            var playingUser = new PlayingUser();
-                            playingUser.steamId = keys[i];
-                            playingUser.steamGroupId = richPresence.steam_player_group;
-                            playingUser.map = richPresence['game:map'];
-                            const correspondingUser = allUsers.find(
-                                (user) => user.steamId === playingUser.steamId
-                            );
-                            if (correspondingUser) {
-                                playingUser.discordId = correspondingUser.discordId;
-                            }
-                            playingUsers.push(playingUser);
+    //RICH PRESENCE
+    user.requestRichPresence(730, steamIds, async (err, data) => {
+        if (data.users) {
+            var playingUsers = [];
+            const keys = Object.keys(data.users);
+            const userArray = Object.values(data.users);
+            if (userArray.length > 0) {
+                for (var i = 0; i < userArray.length; i++) {
+                    const richPresence = userArray[i].richPresence;
+                    if (richPresence['game:mode'] === 'competitive' && (richPresence['system:lock'] === 'mmqueue' || richPresence['game:score'] === '[ 0 : 0 ]')) {
+                        //is in warup or starting game
+                        var playingUser = new PlayingUser();
+                        playingUser.steamId = keys[i];
+                        playingUser.steamGroupId = richPresence.steam_player_group;
+                        playingUser.map = richPresence['game:map'];
+                        const correspondingUser = allUsers.find(
+                            (user) => user.steamId === playingUser.steamId
+                        );
+                        if (correspondingUser) {
+                            playingUser.discordId = correspondingUser.discordId;
                         }
+                        playingUsers.push(playingUser);
                     }
-                    await jimmy.sendCsMatchBetDetails(playingUsers);
                 }
+                await jimmy.sendCsMatchBetDetails(playingUsers);
             }
-        });
+        }
     });
 }
 
