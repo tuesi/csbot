@@ -3,6 +3,10 @@ const VacReport = require('../models/vac-report');
 const GameData = require('../mongodb/game-db-model');
 const jimmy = require('../jimmy');
 
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 async function checkForVacBans() {
     console.log("vac check");
     const currectDate = new Date();
@@ -35,6 +39,7 @@ async function checkForVacBans() {
                     await jimmy.sendCsVacBanDetails(vacReport);
                 }
             }
+            await delay(500);
         });
     }
 }
@@ -59,6 +64,7 @@ async function checkPlayerBans(url, daysSinceMatch) {
             }
             return vacIds;
         } else {
+            console.log(response);
             console.log('Failed to get VAC ban data.');
         }
     } catch (error) {
