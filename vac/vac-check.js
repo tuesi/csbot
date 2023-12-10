@@ -12,7 +12,7 @@ async function checkForVacBans() {
     const currectDate = new Date();
     const foundMatch = await GameData.find().exec();
     if (foundMatch.length > 0) {
-        foundMatch.forEach(async match => {
+        for (const match of foundMatch) {
             var daysSinceMatch = 300;
             if (match.gameDate) {
                 daysSinceMatch = Math.floor((currectDate - match.gameDate) / (1000 * 60 * 60 * 24));
@@ -39,8 +39,8 @@ async function checkForVacBans() {
                     await jimmy.sendCsVacBanDetails(vacReport);
                 }
             }
-            await delay(500);
-        });
+            await delay(1000);
+        }
     }
 }
 
