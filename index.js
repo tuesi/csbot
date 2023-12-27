@@ -79,9 +79,9 @@ cron.schedule('*/5 * * * *', checkForNewGames);
 
 
 //Get player steam status. (To see if it started the game)
-cron.schedule('*/1 * * * *', () => {
-    playerGameStatus.getPlayerStartedMatch(user);
-});
+// cron.schedule('*/1 * * * *', () => {
+//     playerGameStatus.getPlayerStartedMatch(user);
+// });
 
 
 user.on('friendRelationship', (steamID, relationship) => {
