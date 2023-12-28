@@ -65,7 +65,7 @@ csgo.on('connectedToGC', () => {
     });
 
 async function checkForNewGames() {
-    var users = await newGameCheck.checkIfNewGamesAvailable();
+    let users = await newGameCheck.checkIfNewGamesAvailable();
     if (users && users.length > 0) {
         csgo.once('matchList', async (matchData, data) => {
             getGameData(matchData, data);
