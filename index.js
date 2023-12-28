@@ -135,7 +135,13 @@ var logOnDetails = {
 
 logOnDetails.auth_code = process.env.AUTH_CODE;
 
-user.logOn(logOnDetails);
+//user.logOn(logOnDetails);
+
+try {
+    user.logOn(logOnDetails);
+  } catch (error) {
+    console.error('Error during logOn:', error);
+  }
 
 user.on('steamGuard', (domain, callback) => {
     const steamGuardCode = process.env.AUTH_CODE;
