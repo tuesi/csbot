@@ -122,6 +122,9 @@ csgo.on('matchList', async (matchData, data) => {
             }
         }
     }
+    defaultGameData = null;
+    data = null;
+    matchData = null;
 });
 
 csgo.on('error', (err) => {
