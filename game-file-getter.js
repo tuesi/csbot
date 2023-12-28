@@ -5,8 +5,8 @@ const unbzip2 = require('unbzip2-stream');
 //delay 60000
 async function getDemoFile(matchId, demoUrl, retries = 3, delay = 60000) {
     console.log('get demo');
-    const localDemoBz2FilePath = `currentDemo${matchId}.dem.bz2`;
-    const localDemoFilePath = `currentDemo${matchId}.dem`;
+    const localDemoBz2FilePath = `/demos/currentDemo${matchId}.dem.bz2`;
+    const localDemoFilePath = `/demos/currentDemo${matchId}.dem`;
 
     function attemptRequest(retriesLeft) {
         return new Promise((resolve, reject) => {
