@@ -30,6 +30,8 @@ async function getDemoFile(matchId, demoUrl, retries = 3, delay = 60000) {
                         resolve(localDemoFilePath);
 
                         fs.unlink(localDemoBz2FilePath, (err) => {
+                            bz2ReadStream.close();
+                            demWriteStream.close();
                             if (err) {
                                 console.error('Error deleting .bz2 file:', err);
                             } else {
