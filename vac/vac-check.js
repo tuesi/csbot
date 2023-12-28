@@ -41,7 +41,7 @@ async function checkForVacBans() {
             }
             await delay(1000);
         }
-    }
+            }
 }
 
 //76561198447475184 ID WITH VAC BAN

@@ -60,7 +60,7 @@ csgo.on('connectedToGC', () => {
     //CSGO-OYkmR-mo9fN-MCCt7-YtphP-LwSOG GAME WITH HOSTAGE RESCUE
 
     //csgo.requestGame("CSGO-OYkmR-mo9fN-MCCt7-YtphP-LwSOG");
-});
+    });
 
 async function checkForNewGames() {
     var users = await newGameCheck.checkIfNewGamesAvailable();

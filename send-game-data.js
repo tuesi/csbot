@@ -27,7 +27,6 @@ async function send(matchId, data) {
     const gameId = await saveGameData(data, lastMatchId);
 
     data.gameId = gameId.toString();
-    console.log(data);
 
     await jimmyApi.sendCsMatchDetails(data);
 
