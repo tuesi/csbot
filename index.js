@@ -144,6 +144,7 @@ try {
   }
 
 user.on('steamGuard', (domain, callback) => {
+    console.log('steam guard');
     const steamGuardCode = process.env.AUTH_CODE;
     callback(steamGuardCode);
 });
