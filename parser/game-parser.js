@@ -43,6 +43,16 @@ async function demofileParse(demoPath) {
         matchDetails.team1Score = team1WinAmount;
         matchDetails.team2Score = team2WinAmount;
 
+        header = null;
+        players = null;
+        other_death = null;
+        scores = null;
+        flash = null;
+        kills = null;
+        playerHurtEvents = null;
+        roundEnd = null;
+        playersEachRound = null;
+
         return matchDetails;
 
         //winner 2 = terrorist

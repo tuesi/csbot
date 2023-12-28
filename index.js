@@ -120,17 +120,16 @@ function getGameData(matchData, data) {
                     .then(async (demoPath) => {
                         if (demoPath) {
                             var gameData = await gameParser.demofileParse(demoPath);
-                            sendGameData.send(matchData[0].matchid, gameData);
-                            console.log(gameData);
+                            await sendGameData.send(matchData[0].matchid, gameData);
                             defaultGameData = null;
                             gameData = null;
                             matchData = null;
                             data = null;
                         }
                     })
-                    .catch((error) => {
+                    .catch(async (error) => {
                         console.log('unable to download game data');
-                        sendGameData.send(matchData[0].matchid, defaultGameData);
+                        await sendGameData.send(matchData[0].matchid, defaultGameData);
                         defaultGameData = null;
                         gameData = null;
                         matchData = null;
