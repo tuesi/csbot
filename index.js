@@ -112,7 +112,6 @@ csgo.on('matchList', async (matchData, data) => {
                         if (demoPath) {
                             var gameData = await gameParser.demofileParse(demoPath);
                             sendGameData.send(matchData[0].matchid, gameData);
-                            console.log(gameData);
                             defaultGameData = null;
                             gameData = null;
                             matchData = null;
