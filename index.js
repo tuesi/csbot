@@ -26,6 +26,8 @@ let user = new SteamUser();
 const community = new SteamCommunity();
 let csgo = new GlobalOffensive(user);
 
+let matchListListener;
+
 mongoose.connect(process.env.MONGOOSE);
 
 mongoose.connection.on('connected', () => {
@@ -59,16 +61,49 @@ csgo.on('connectedToGC', () => {
     //CSGO-WETqC-mumcv-tBMFR-E437W-TGwPB  GAME WITH CHICKENS
     //CSGO-OYkmR-mo9fN-MCCt7-YtphP-LwSOG GAME WITH HOSTAGE RESCUE
 
-    //csgo.requestGame("CSGO-OYkmR-mo9fN-MCCt7-YtphP-LwSOG");
+    matchListListener = async (matchData, data) => {
+        getMatchData(matchData, data);
+    };
+    csgo.on('matchList', matchListListener);
+
+    csgo.requestGame("CSGO-XbURq-Eyut6-QVysX-9P2Sd-ciQZQ");
     });
 
 async function checkForNewGames() {
-    var users = await newGameCheck.checkIfNewGamesAvailable();
+    let users = await newGameCheck.checkIfNewGamesAvailable();
     if (users && users.length > 0) {
+        matchListListener = async (matchData, data) => {
+            getMatchData(matchData, data);
+        };
+        csgo.on('matchList', matchListListener);
         users.forEach(async user => {
             csgo.requestGame(user.lastMatchId);
         });
     }
+}
+
+function getMatchData(matchData, data) {
+    let defaultGameData = defaultDataParser.defaultDataParser(matchData);
+    if (matchData && matchData.length > 0) {
+        for (const element of matchData[0].roundstatsall) {
+            if (element.map) {
+                gameFileGetter.getDemoFile(matchData[0].matchid, element.map)
+                    .then(async (demoPath) => {
+                        if (demoPath) {
+                            let data = await gameParser.demofileParse(demoPath);
+                            sendGameData.send(matchData[0].matchid, data);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log('unable to download game data');
+                        sendGameData.send(matchData[0].matchid, defaultGameData);
+                    })
+                break;
+            }
+        }
+    }
+    csgo.removeListener('matchList', matchListListener);
+    matchListListener = null;
 }
 
 //5 minutes
@@ -102,36 +137,15 @@ user.on('friendRelationship', (steamID, relationship) => {
 
 //http://replay181.valve.net/730/003636589152151011577_1693418786.dem.bz2
 
-csgo.on('matchList', async (matchData, data) => {
-    var defaultGameData = defaultDataParser.defaultDataParser(matchData);
-    if (matchData && matchData.length > 0) {
-        for (const element of matchData[0].roundstatsall) {
-            if (element.map) {
-                gameFileGetter.getDemoFile(matchData[0].matchid, element.map)
-                    .then(async (demoPath) => {
-                        if (demoPath) {
-                            var data = await gameParser.demofileParse(demoPath);
-                            sendGameData.send(matchData[0].matchid, data);
-                        }
-                    })
-                    .catch((error) => {
-                        console.log('unable to download game data');
-                        sendGameData.send(matchData[0].matchid, defaultGameData);
-                    })
-                break;
-            }
-        }
-    }
-    defaultGameData = null;
-    data = null;
-    matchData = null;
-});
+// csgo.on('matchList', async (matchData, data) => {
+//     getMatchData(matchData, data);
+// });
 
 csgo.on('error', (err) => {
     console.error('CS:GO GC error:', err);
 });
 
-var logOnDetails = {
+let logOnDetails = {
     "accountName": process.env.ACCOUNT_NAME,
     "password": process.env.ACCOUNT_PASSWORD
 };

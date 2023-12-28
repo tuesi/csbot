@@ -6,7 +6,7 @@ var steamIds;
 
 async function getPlayerStartedMatch(user) {
 
-    var allUsers = await User.find().exec();
+    let allUsers = await User.find().exec();
     steamIds = allUsers.map(user => user.steamId);
 
     // user.getPersonas(steamIds, (err, data) => {
@@ -16,15 +16,15 @@ async function getPlayerStartedMatch(user) {
     //RICH PRESENCE
     user.requestRichPresence(730, steamIds, async (err, data) => {
         if (data && data.users) {
-            var playingUsers = [];
+            let playingUsers = [];
             const keys = Object.keys(data.users);
             const userArray = Object.values(data.users);
             if (userArray.length > 0) {
-                for (var i = 0; i < userArray.length; i++) {
+                for (let i = 0; i < userArray.length; i++) {
                     const richPresence = userArray[i].richPresence;
                     if (richPresence['game:mode'] === 'competitive' && (richPresence['system:lock'] === 'mmqueue' || richPresence['game:score'] === '[ 0 : 0 ]')) {
                         //is in warup or starting game
-                        var playingUser = new PlayingUser();
+                        let playingUser = new PlayingUser();
                         playingUser.steamId = keys[i];
                         playingUser.steamGroupId = richPresence.steam_player_group;
                         playingUser.map = richPresence['game:map'];

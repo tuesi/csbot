@@ -1,8 +1,8 @@
 const cs = require("csgo");
 
 function getMatchId(latestMatchId) {
-    var decoder = new cs.SharecodeDecoder(latestMatchId);
-    var decoded = decoder.decode();
+    let decoder = new cs.SharecodeDecoder(latestMatchId);
+    let decoded = decoder.decode();
     return decoded.matchId;
 }
 

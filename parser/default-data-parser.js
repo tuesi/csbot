@@ -7,17 +7,17 @@ const MatchDetails = require('../models/match-details');
 //https://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=XXX&steamid=XXX&relationship=friend
 
 function defaultDataParser(gameData) {
-    var data = gameData[0].roundstatsall;
-    var gameInfo = data[[data.length - 1]];
-    var playerIds = gameInfo.reservation.account_ids;
+    let data = gameData[0].roundstatsall;
+    let gameInfo = data[[data.length - 1]];
+    let playerIds = gameInfo.reservation.account_ids;
 
-    var matchDetails = new MatchDetails();
+    let matchDetails = new MatchDetails();
     matchDetails.team1Score = gameInfo.team_scores[0];
     matchDetails.team2Score = gameInfo.team_scores[1];
     let allPlayerStats = [];
 
-    for (var i = 0; i < playerIds.length; i++) {
-        var playerStats = new PlayerStat();
+    for (let i = 0; i < playerIds.length; i++) {
+        let playerStats = new PlayerStat();
         playerStats.steamId = helper.ToSteamID(playerIds[i]);
         playerStats.kills = gameInfo.kills[i];
         playerStats.deaths = gameInfo.deaths[i];

@@ -7,7 +7,7 @@ async function demofileParse(demoPath) {
     try {
         //console.log(demoPath);
 
-        var matchDetails = new MatchDetails();
+        let matchDetails = new MatchDetails();
         let allPlayerStats = [];
 
         let header = parseHeader(demoPath);
@@ -25,8 +25,8 @@ async function demofileParse(demoPath) {
         let flash = parseEvent(demoPath, 'player_blind', ["team_name"], ["is_warmup_period"]);
         let kills = parseEvent(demoPath, "player_death", ["player_steamid", "active_weapon_name", "active_weapon", "item_def_idx", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name"]);
         let playerHurtEvents = parseEvent(demoPath, "player_hurt", ["player_steamid", "active_weapon_name", "item_def_idx"], ["total_rounds_played", "is_warmup_period"]);
-        var roundEnd = parseEvent(demoPath, "round_end", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t", "is_rescuing", "round_win_reason", "objective_total"]);
-        var playersEachRound = parseEvent(demoPath, "player_spawn", ["player_steamid", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
+        let roundEnd = parseEvent(demoPath, "round_end", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t", "is_rescuing", "round_win_reason", "objective_total"]);
+        let playersEachRound = parseEvent(demoPath, "player_spawn", ["player_steamid", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
         //var hostage = parseEvent(demoPath, "hostage_rescued", ["player_steamid", "time"], ["total_rounds_played", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
 
         players.forEach(player => {
@@ -94,10 +94,10 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
 
     //shots_fired
 
-    var pimpesMentele = false;
+    let pimpesMentele = false;
 
     for (let round = 0; round <= maxRound; round++) {
-        var roundKills = userDeagleKills.filter(kill => kill.total_rounds_played == round);
+        let roundKills = userDeagleKills.filter(kill => kill.total_rounds_played == round);
         if (roundKills.length >= 4) {
             pimpesMentele = true;
         }
@@ -119,7 +119,7 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
         molotovAllDmg += dmg.dmg_health;
     });
 
-    var playerStats = new PlayerStat();
+    let playerStats = new PlayerStat();
 
     playerStats.steamId = steamId;
     playerStats.name = name;
@@ -157,37 +157,37 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
 
 
     //HLTV 2.0
-    var enemyKills = killsNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.user_team_num == team);
-    var playerKills = killsNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.attacker_steamid == steamId);
+    let enemyKills = killsNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.user_team_num == team);
+    let playerKills = killsNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.attacker_steamid == steamId);
 
     //ROUND END
 
-    var roundEndInTeamWin = roundEnd.filter(round => round.winner == team);
+    let roundEndInTeamWin = roundEnd.filter(round => round.winner == team);
     //round.attacker_steamid == null to account for cluches where dead by c4
 
     //TODO Also filter wins where hostage been rescued 
-    var playerAliveEvents = killsNoWarmup.filter(round => round.user_steamid != steamId || round.attacker_steamid == null);
+    let playerAliveEvents = killsNoWarmup.filter(round => round.user_steamid != steamId || round.attacker_steamid == null);
 
-    var allWinningRoundEvents = [];
+    let allWinningRoundEvents = [];
 
     roundEndInTeamWin.forEach(winRound => {
-        var winRoundEvents = playerAliveEvents.filter(round => round.total_rounds_played == winRound.total_rounds_played);
+        let winRoundEvents = playerAliveEvents.filter(round => round.total_rounds_played == winRound.total_rounds_played);
         allWinningRoundEvents.push(...winRoundEvents);
     });
 
     //PLAYER SPAWN
 
-    var playerClutchRounds = 0;
+    let playerClutchRounds = 0;
 
     for (let round = 0; round <= maxRound; round++) {
-        var currentRound = allWinningRoundEvents.filter(winRound => winRound.total_rounds_played == round);
+        let currentRound = allWinningRoundEvents.filter(winRound => winRound.total_rounds_played == round);
         if (currentRound.length > 0) {
 
             //get current player at round start
             const enemyPlayers = new Set();
             const teamPlayers = new Set();
 
-            var currentRound = playersEachRound.filter(winRound => winRound.total_rounds_played == round);
+            let currentRound = playersEachRound.filter(winRound => winRound.total_rounds_played == round);
             currentRound.forEach(event => {
                 if (event.user_team_num === team) {
                     teamPlayers.add(event.user_steamid);
@@ -200,11 +200,11 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
             //sort round by tick
             currentRound.sort((a, b) => a.tick - b.tick);
 
-            var teamSize = teamPlayers.size
-            var enemySize = enemyPlayers.size;
+            let teamSize = teamPlayers.size
+            let enemySize = enemyPlayers.size;
 
-            var playerDead = false;
-            var clutch = false;
+            let playerDead = false;
+            let clutch = false;
 
             //check if user cluch
             currentRound.forEach(event => {
@@ -248,24 +248,24 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
     //     return playerDeathRounds.some(death => death.total_rounds_played != action.total_rounds_played);
     // });
 
-    var roundsCountToKAST = 0;
+    let roundsCountToKAST = 0;
 
-    var playerTradeCount = 0;
-    var playerKillRounds = 0;
-    var playerAssistsRounds = 0;
-    var multikills = 0;
-    var opening_kills = 0;
+    let playerTradeCount = 0;
+    let playerKillRounds = 0;
+    let playerAssistsRounds = 0;
+    let multikills = 0;
+    let opening_kills = 0;
 
-    var playerTeamKills = killsNoWarmup.filter(trade => trade.attacker_team_num == trade.user_team_num && trade.attacker_steamid == steamId);
+    let playerTeamKills = killsNoWarmup.filter(trade => trade.attacker_team_num == trade.user_team_num && trade.attacker_steamid == steamId);
 
     for (let round = 0; round <= maxRound; round++) {
 
-        var kill = false;
-        var trade = false;
-        var assist = false;
-        var survive = false;
+        let kill = false;
+        let trade = false;
+        let assist = false;
+        let survive = false;
 
-        var tradeOccured = enemyKills.some(trade => trade.total_rounds_played === round) &&
+        let tradeOccured = enemyKills.some(trade => trade.total_rounds_played === round) &&
             playerKills.some(trade => trade.total_rounds_played === round);
         if (tradeOccured) {
             playerTradeCount++;
@@ -277,14 +277,14 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
             kill = true;
         }
 
-        var playerAssists = killsNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.assister_steamid == steamId);
+        let playerAssists = killsNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.assister_steamid == steamId);
 
         if (playerAssists.some(trade => trade.total_rounds_played === round)) {
             playerAssistsRounds++;
             assist = true;
         }
 
-        var palyerDeaths = killsNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.user_steamid == steamId);
+        let palyerDeaths = killsNoWarmup.filter(trade => trade.attacker_team_num != trade.user_team_num && trade.user_steamid == steamId);
 
         if (!palyerDeaths.some(death => death.total_rounds_played === round)) {
             survive = true;
@@ -298,7 +298,7 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
             multikills++;
         }
 
-        var currentRound = killsNoWarmup.filter(kill => kill.total_rounds_played === round);
+        let currentRound = killsNoWarmup.filter(kill => kill.total_rounds_played === round);
         let lowestTickKill = Math.min(...currentRound.map(o => o.tick));
 
         if (currentRound.filter(kill => kill.tick == lowestTickKill && kill.attacker_steamid == steamId).length > 0) {
@@ -307,20 +307,20 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
 
     }
 
-    var playerAssitsPerRound = userScore[0].user_assists_total > 0 ? userScore[0].user_assists_total / maxRound : 0;
+    let playerAssitsPerRound = userScore[0].user_assists_total > 0 ? userScore[0].user_assists_total / maxRound : 0;
 
     //console.log("Round KAST: " + roundsCountToKAST);
     //console.log("Max round:" + maxRound);
 
-    var KAST = ((roundsCountToKAST) / maxRound) * 100;
+    let KAST = ((roundsCountToKAST) / maxRound) * 100;
 
-    var KPR = (userScore[0].user_kills_total / maxRound);
-    var DPR = (userScore[0].user_deaths_total / maxRound);
+    let KPR = (userScore[0].user_kills_total / maxRound);
+    let DPR = (userScore[0].user_deaths_total / maxRound);
     //var Impact = (2.13 * KPR) + (0.42 * playerAssitsPerRound) - 0.41;
-    var Impact = (0.05 * multikills) + (0.025 * opening_kills) + (0.025 * playerClutchRounds) + (0.0075 * KPR) + (0.0075 * playerAssitsPerRound);
-    var ADR = Math.round(userScore[0].user_damage_total / maxRound);
+    let Impact = (0.05 * multikills) + (0.025 * opening_kills) + (0.025 * playerClutchRounds) + (0.0075 * KPR) + (0.0075 * playerAssitsPerRound);
+    let ADR = Math.round(userScore[0].user_damage_total / maxRound);
 
-    var HLTV20 = (0.0073 * KAST) + (0.3591 * KPR) + (-0.5329 * DPR) + (0.2372 * Impact) + (0.0032 * ADR) + 0.1587;
+    let HLTV20 = (0.0073 * KAST) + (0.3591 * KPR) + (-0.5329 * DPR) + (0.2372 * Impact) + (0.0032 * ADR) + 0.1587;
 
     //console.log("Player HLTV 2.0 Rating: " + name + " : " + HLTV20);
 

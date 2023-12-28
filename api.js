@@ -29,7 +29,7 @@ router.get('/register', verifyToken, async (req, res) => {
             console.log(steamId, matchAuthId, lastMatchId);
             const newLastMatchId = await getGameCode.makeAPICallWithCode(steamId, matchAuthId, lastMatchId);
             const matchId = await getMatchId.getMatchId(newLastMatchId);
-            var lastMatchDataSend = false;
+            let lastMatchDataSend = false;
 
             // Create a new user document and save it to the database
             const newUser = new User({
@@ -138,10 +138,10 @@ const getPlayerData = async (player) => {
 
 async function getSteamUserData(steamId) {
     const url = process.env.STEAM_URL + process.env.STEAM_AUTH_KEY + "&format=json&steamids=" + steamId;
-    var response = await fetch(url, {
+    let response = await fetch(url, {
         method: 'GET'
     });
-    var resp = await response.json();
+    let resp = await response.json();
     return resp.response.players;
 }
 

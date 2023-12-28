@@ -13,19 +13,19 @@ async function checkForVacBans() {
     const foundMatch = await GameData.find().exec();
     if (foundMatch.length > 0) {
         for (const match of foundMatch) {
-            var daysSinceMatch = 300;
+            let daysSinceMatch = 300;
             if (match.gameDate) {
                 daysSinceMatch = Math.floor((currectDate - match.gameDate) / (1000 * 60 * 60 * 24));
             }
-            var steamIds = [];
+            let steamIds = [];
             match.playerStats.forEach(async player => {
                 if (player.vac == false) {
                     steamIds.push(player.steamId);
                 }
             });
             if (steamIds.length > 0) {
-                var url = process.env.VAC_BAN_URL + process.env.STEAM_AUTH_KEY + "&steamids=" + steamIds;
-                var vacIds = await checkPlayerBans(url, daysSinceMatch);
+                let url = process.env.VAC_BAN_URL + process.env.STEAM_AUTH_KEY + "&steamids=" + steamIds;
+                let vacIds = await checkPlayerBans(url, daysSinceMatch);
                 if (vacIds && vacIds.length > 0) {
                     for (const player of match.playerStats) {
                         if (vacIds.includes(player.steamId)) {
@@ -35,7 +35,7 @@ async function checkForVacBans() {
                     await match.save();
                     const vacMach = JSON.parse(JSON.stringify(match));
                     vacMach.gameId = match._id;
-                    var vacReport = new VacReport(vacMach, vacIds);
+                    let vacReport = new VacReport(vacMach, vacIds);
                     await jimmy.sendCsVacBanDetails(vacReport);
                 }
             }

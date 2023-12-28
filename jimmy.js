@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const loginData = { username: process.env.API_USERNAME, password: process.env.API_PASSWORD };
 
 var token;
-let retryWithNewToken = false;
+var retryWithNewToken = false;
 
 async function getApiToken() {
     const tokenResponse = await fetch(process.env.JIMMY_URL + "v1/auth/login", {
@@ -29,7 +29,7 @@ async function sendCsMatchDetails(details) {
     const resolvedDetails = await details;
 
     try {
-        var response = await fetch(process.env.JIMMY_URL + "v1/cs/recent-game", {
+        let response = await fetch(process.env.JIMMY_URL + "v1/cs/recent-game", {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -66,7 +66,7 @@ async function sendCsVacBanDetails(details) {
     const resolvedDetails = await details;
 
     try {
-        var response = await fetch(process.env.JIMMY_URL + "v1/cs/vac-report", {
+        let response = await fetch(process.env.JIMMY_URL + "v1/cs/vac-report", {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -92,7 +92,7 @@ async function sendCsMatchBetDetails(details) {
     const resolvedDetails = await details;
 
     try {
-        var response = await fetch(process.env.JIMMY_URL + "v1/cs/game-start", {
+        let response = await fetch(process.env.JIMMY_URL + "v1/cs/game-start", {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,

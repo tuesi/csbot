@@ -7,7 +7,7 @@ const jimmyApi = require('./jimmy');
 async function send(matchId, data) {
     const users = await User.find({ matchId: matchId, lastMatchDataSend: false }).exec();
     //const users = await User.find().exec();
-    var lastMatchId = null;
+    let lastMatchId = null;
     if (users.length > 0) {
         lastMatchId = users[0].lastMatchId;
     }
@@ -34,7 +34,7 @@ async function send(matchId, data) {
 
     //UNCOMMENT TO DELETE OLD FILE
 
-    var filePath = `currentDemo${matchId}.dem`;
+    let filePath = `currentDemo${matchId}.dem`;
 
     fs.access(filePath, fs.constants.F_OK, (err) => {
         if (err) {

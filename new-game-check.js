@@ -19,7 +19,7 @@ async function checkIfNewGamesAvailable() {
             if (latestGameCode !== user.lastMatchId && latestGameCode != null) {
                 console.log(`New game detected for ${user.discordId}`);
 
-                var matchId = await getMatchid.getMatchId(latestGameCode);
+                let matchId = await getMatchid.getMatchId(latestGameCode);
 
                 const existingUser = await User.findOne({ matchId });
 
