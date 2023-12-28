@@ -58,13 +58,18 @@ csgo.on('connectedToGC', () => {
 
     //CSGO-WETqC-mumcv-tBMFR-E437W-TGwPB  GAME WITH CHICKENS
     //CSGO-OYkmR-mo9fN-MCCt7-YtphP-LwSOG GAME WITH HOSTAGE RESCUE
-
-    //csgo.requestGame("CSGO-XbURq-Eyut6-QVysX-9P2Sd-ciQZQ");
+    // csgo.once('matchList', async (matchData, data) => {
+    //     getGameData(matchData, data);
+    // });
+    // csgo.requestGame("CSGO-XbURq-Eyut6-QVysX-9P2Sd-ciQZQ");
     });
 
 async function checkForNewGames() {
     var users = await newGameCheck.checkIfNewGamesAvailable();
     if (users && users.length > 0) {
+        csgo.once('matchList', async (matchData, data) => {
+            getGameData(matchData, data);
+        });
         users.forEach(async user => {
             csgo.requestGame(user.lastMatchId);
         });
@@ -102,7 +107,11 @@ user.on('friendRelationship', (steamID, relationship) => {
 
 //http://replay181.valve.net/730/003636589152151011577_1693418786.dem.bz2
 
-csgo.on('matchList', async (matchData, data) => {
+// csgo.on('matchList', async (matchData, data) => {
+//     getGameData(matchData, data);
+// });
+
+function getGameData(matchData, data) {
     var defaultGameData = defaultDataParser.defaultDataParser(matchData);
     if (matchData && matchData.length > 0) {
         for (const element of matchData[0].roundstatsall) {
@@ -112,6 +121,7 @@ csgo.on('matchList', async (matchData, data) => {
                         if (demoPath) {
                             var gameData = await gameParser.demofileParse(demoPath);
                             sendGameData.send(matchData[0].matchid, gameData);
+                            console.log(gameData);
                             defaultGameData = null;
                             gameData = null;
                             matchData = null;
@@ -130,7 +140,7 @@ csgo.on('matchList', async (matchData, data) => {
             }
         }
     }
-});
+}
 
 csgo.on('error', (err) => {
     console.error('CS:GO GC error:', err);
