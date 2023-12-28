@@ -110,20 +110,22 @@ csgo.on('matchList', async (matchData, data) => {
                 gameFileGetter.getDemoFile(matchData[0].matchid, element.map)
                     .then(async (demoPath) => {
                         if (demoPath) {
-                            var data = await gameParser.demofileParse(demoPath);
-                            sendGameData.send(matchData[0].matchid, data);
-                            console.log(data);
+                            var gameData = await gameParser.demofileParse(demoPath);
+                            sendGameData.send(matchData[0].matchid, gameData);
+                            console.log(gameData);
                             defaultGameData = null;
-                            data = null;
+                            gameData = null;
                             matchData = null;
+                            data = null;
                         }
                     })
                     .catch((error) => {
                         console.log('unable to download game data');
                         sendGameData.send(matchData[0].matchid, defaultGameData);
                         defaultGameData = null;
-                        data = null;
+                        gameData = null;
                         matchData = null;
+                        data = null;
                     })
                 break;
             }
