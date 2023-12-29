@@ -19,11 +19,11 @@ async function checkForVacBans() {
                 daysSinceMatch = Math.floor((currectDate - match.gameDate) / (1000 * 60 * 60 * 24));
             }
             let steamIds = [];
-            match.playerStats.forEach(async player => {
+            for(const player of match.playerStats) {
                 if (player.vac == false) {
                     steamIds.push(player.steamId);
                 }
-            });
+            }
             if (steamIds.length > 0) {
                 let url = process.env.VAC_BAN_URL + process.env.STEAM_AUTH_KEY + "&steamids=" + steamIds;
                 let vacIds = await checkPlayerBans(url, daysSinceMatch);
