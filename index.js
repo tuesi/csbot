@@ -183,9 +183,8 @@ app.use(
 
 
 //UNCOMMENT WHEN CAN CHECK START
-//Cron.schedule('0 6 * * *', () => { vacReport.checkForVacBans() });
-
-const varCheckJob = Cron('* * * * *', () => { vacReport.checkForVacBans() });
+const varCheckJob = Cron('0 6 * * *', () => { vacReport.checkForVacBans() });
+//const varCheckJob = Cron('* * * * *', () => { vacReport.checkForVacBans() });
 
 const apiRouter = require('./api');
 
