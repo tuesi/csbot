@@ -85,8 +85,8 @@ async function getGameData(matchData, data) {
                 gameFileGetter.getDemoFile(matchData[0].matchid, element.map)
                     .then(async (demoPath) => {
                         if (demoPath) {
-                            var gameData = await gameParser.demofileParse(demoPath);
-                            await sendGameData.send(matchData[0].matchid, gameData);
+                            //var gameData = await gameParser.demofileParse(demoPath);
+                            await sendGameData.send(matchData[0].matchid);
                         }
                     })
                     .catch(async (error) => {
