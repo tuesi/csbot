@@ -8,7 +8,7 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
-const cron = require('node-cron');
+const { Cron } = require("croner");
 const cors = require('cors');
 require('dotenv').config();
 
@@ -80,8 +80,7 @@ async function checkForNewGames() {
 //UNCOMMENT
 // OLD setInterval(checkForNewGames, 300000);
 
-cron.schedule('*/5 * * * *', checkForNewGames);
-
+const checkForGamesJon = Cron('*/5 * * * *', checkForNewGames);
 
 //Get player steam status. (To see if it started the game)
 // cron.schedule('*/1 * * * *', () => {
@@ -184,9 +183,9 @@ app.use(
 
 
 //UNCOMMENT WHEN CAN CHECK START
-cron.schedule('0 6 * * *', () => { vacReport.checkForVacBans() });
+//Cron.schedule('0 6 * * *', () => { vacReport.checkForVacBans() });
 
-//cron.schedule('*/10 * * * *', () => { vacReport.checkForVacBans() });
+const varCheckJob = Cron('* * * * *', () => { vacReport.checkForVacBans() });
 
 const apiRouter = require('./api');
 
