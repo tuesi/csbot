@@ -36,7 +36,7 @@ async function send(matchId) {
 
     //UNCOMMENT TO DELETE OLD FILE
 
-    let filePath = `demos/currentDemo${matchId}.dem`;
+    let filePath = `currentDemo${matchId}.dem`;
 
     fs.access(filePath, fs.constants.F_OK, (err) => {
         if (err) {
