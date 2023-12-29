@@ -61,7 +61,7 @@ csgo.on('connectedToGC', () => {
     // csgo.once('matchList', async (matchData, data) => {
     //     getGameData(matchData, data);
     // });
-    csgo.requestGame("CSGO-n2t2x-xzLaN-S5CXf-fuvmE-bTsdA");
+    //csgo.requestGame("CSGO-n2t2x-xzLaN-S5CXf-fuvmE-bTsdA");
     });
 
 async function checkForNewGames() {
@@ -85,8 +85,8 @@ async function getGameData(matchData, data) {
                 gameFileGetter.getDemoFile(matchData[0].matchid, element.map)
                     .then(async (demoPath) => {
                         if (demoPath) {
-                            //var gameData = await gameParser.demofileParse(demoPath);
-                            await sendGameData.send(matchData[0].matchid);
+                            var gameData = await gameParser.demofileParse(demoPath);
+                            await sendGameData.send(matchData[0].matchid, gameData);
                         }
                     })
                     .catch(async (error) => {

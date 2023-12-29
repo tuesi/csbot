@@ -4,33 +4,33 @@ const fs = require('fs');
 
 const jimmyApi = require('./jimmy');
 
-async function send(matchId) {
-    // const users = await User.find({ matchId: matchId, lastMatchDataSend: false }).exec();
-    // //const users = await User.find().exec();
-    // let lastMatchId = null;
-    // if (users.length > 0) {
-    //     lastMatchId = users[0].lastMatchId;
-    // }
-    // for (const user of users) {
-    //     // Update lastMatchDataSend to true
-    //     user.lastMatchDataSend = true;
-    //     await user.save(); // Save the updated user document
+async function send(matchId, data) {
+    const users = await User.find({ matchId: matchId, lastMatchDataSend: false }).exec();
+    //const users = await User.find().exec();
+    let lastMatchId = null;
+    if (users.length > 0) {
+        lastMatchId = users[0].lastMatchId;
+    }
+    for (const user of users) {
+        // Update lastMatchDataSend to true
+        user.lastMatchDataSend = true;
+        await user.save(); // Save the updated user document
 
-    //     //console.log(data.playerStats);
-    //     // Find and update the corresponding user in data.playerStats
-    //     const playerStatIndex = data.playerStats.findIndex(player => player.steamId === user.steamId);
-    //     if (playerStatIndex !== -1) {
-    //         data.playerStats[playerStatIndex].discordId = user.discordId; // Update discordId
-    //     }
-    // }
+        //console.log(data.playerStats);
+        // Find and update the corresponding user in data.playerStats
+        const playerStatIndex = data.playerStats.findIndex(player => player.steamId === user.steamId);
+        if (playerStatIndex !== -1) {
+            data.playerStats[playerStatIndex].discordId = user.discordId; // Update discordId
+        }
+    }
 
-    // const gameId = await saveGameData(data, lastMatchId);
+    const gameId = await saveGameData(data, lastMatchId);
 
-    // data.gameId = gameId.toString();
+    data.gameId = gameId.toString();
 
-    // await jimmyApi.sendCsMatchDetails(data);
+    await jimmyApi.sendCsMatchDetails(data);
 
-    // data = null;
+    data = null;
 
     //console.log(data);
 
