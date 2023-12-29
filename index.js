@@ -42,7 +42,7 @@ user.on('loggedOn', () => {
     //playerGameStatus.getPlayerStartedMatch(user);
 });
 
-user.on("friendMessage", function (steamID, message) {
+user.on('friendMessage', (steamID, message) => {
     console.log("Friend message from " + steamID + ": " + message);
     if (message == "Ping") {
         user.chatMessage(steamID, "Pong");
@@ -65,14 +65,37 @@ csgo.on('connectedToGC', () => {
     });
 
 async function checkForNewGames() {
-    let users = await newGameCheck.checkIfNewGamesAvailable();
+    const users = await newGameCheck.checkIfNewGamesAvailable();
     if (users && users.length > 0) {
-        csgo.once('matchList', async (matchData, data) => {
-            getGameData(matchData, data);
-        });
         users.forEach(async user => {
             csgo.requestGame(user.lastMatchId);
         });
+    }
+}
+
+csgo.on('matchList', async (matchData, data) => {
+    await getGameData(matchData, data);
+});
+
+async function getGameData(matchData, data) {
+    var defaultGameData = defaultDataParser.defaultDataParser(matchData);
+    if (matchData && matchData.length > 0) {
+        for (const element of matchData[0].roundstatsall) {
+            if (element.map) {
+                gameFileGetter.getDemoFile(matchData[0].matchid, element.map)
+                    .then(async (demoPath) => {
+                        if (demoPath) {
+                            var gameData = await gameParser.demofileParse(demoPath);
+                            await sendGameData.send(matchData[0].matchid, gameData);
+                        }
+                    })
+                    .catch(async (error) => {
+                        console.log('unable to download game data');
+                        await sendGameData.send(matchData[0].matchid, defaultGameData);
+                    })
+                break;
+            }
+        }
     }
 }
 
@@ -110,36 +133,6 @@ user.on('friendRelationship', (steamID, relationship) => {
 //     getGameData(matchData, data);
 // });
 
-function getGameData(matchData, data) {
-    var defaultGameData = defaultDataParser.defaultDataParser(matchData);
-    if (matchData && matchData.length > 0) {
-        for (const element of matchData[0].roundstatsall) {
-            if (element.map) {
-                gameFileGetter.getDemoFile(matchData[0].matchid, element.map)
-                    .then(async (demoPath) => {
-                        if (demoPath) {
-                            var gameData = await gameParser.demofileParse(demoPath);
-                            await sendGameData.send(matchData[0].matchid, gameData);
-                            defaultGameData = null;
-                            gameData = null;
-                            matchData = null;
-                            data = null;
-                        }
-                    })
-                    .catch(async (error) => {
-                        console.log('unable to download game data');
-                        await sendGameData.send(matchData[0].matchid, defaultGameData);
-                        defaultGameData = null;
-                        gameData = null;
-                        matchData = null;
-                        data = null;
-                    })
-                break;
-            }
-        }
-    }
-}
-
 csgo.on('error', (err) => {
     console.error('CS:GO GC error:', err);
 });
@@ -155,7 +148,7 @@ logOnDetails.auth_code = process.env.AUTH_CODE;
 
 user.logOn(logOnDetails);
 
-user.on('steamGuard', (domain, callback) => {
+user.once('steamGuard', (domain, callback) => {
     console.log('steam guard');
     const steamGuardCode = process.env.AUTH_CODE;
     callback(steamGuardCode);
