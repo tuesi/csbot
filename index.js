@@ -61,7 +61,7 @@ csgo.on('connectedToGC', () => {
     // csgo.once('matchList', async (matchData, data) => {
     //     getGameData(matchData, data);
     // });
-    // csgo.requestGame("CSGO-XbURq-Eyut6-QVysX-9P2Sd-ciQZQ");
+    csgo.requestGame("CSGO-n2t2x-xzLaN-S5CXf-fuvmE-bTsdA");
     });
 
 async function checkForNewGames() {
@@ -103,7 +103,12 @@ async function getGameData(matchData, data) {
 //UNCOMMENT
 // OLD setInterval(checkForNewGames, 300000);
 
-const checkForGamesJon = Cron('*/5 * * * *', checkForNewGames);
+//CSGO-n2t2x-xzLaN-S5CXf-fuvmE-bTsdA
+
+//const checkForGamesJon = Cron('*/5 * * * *', () => {checkForNewGames()});
+const checkForGamesJon = Cron('*/1 * * * *', () => {checkForNewGames()});
+
+//node --inspect index.js   
 
 //Get player steam status. (To see if it started the game)
 // cron.schedule('*/1 * * * *', () => {

@@ -4,7 +4,7 @@ const getMatchid = require('./get-match-id');
 
 async function checkIfNewGamesAvailable() {
 
-    const updatedUsers = [];
+    let updatedUsers = [];
 
     try {
         // Find all users in the database
