@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const VacReport = require('../models/vac-report');
 const GameData = require('../mongodb/game-db-model');
 const jimmy = require('../jimmy');
+const axios = require('axios');
 
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -40,7 +41,7 @@ async function checkForVacBans() {
                 }
             }
             await delay(1000);
-        }
+                }
             }
 }
 
@@ -48,9 +49,7 @@ async function checkForVacBans() {
 
 async function checkPlayerBans(url, daysSinceMatch) {
     try {
-        const response = await fetch(url, {
-            method: 'GET'
-        });
+        const response = await axios.get(url);
 
         if (response.ok) {
             const data = await response.json();
