@@ -40,7 +40,7 @@ async function checkForVacBans() {
                     await jimmy.sendCsVacBanDetails(vacReport);
                 }
             }
-            await delay(1000);
+            await delay(3000);
                 }
             }
 }
