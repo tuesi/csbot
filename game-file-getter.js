@@ -8,6 +8,9 @@ async function getDemoFile(matchId, demoUrl, retries = 3, delay = 60000) {
     const localDemoBz2FilePath = `/demos/currentDemo${matchId}.dem.bz2`;
     const localDemoFilePath = `/demos/currentDemo${matchId}.dem`;
 
+    // const localDemoBz2FilePath = `currentDemo${matchId}.dem.bz2`;
+    // const localDemoFilePath = `currentDemo${matchId}.dem`;
+
     function attemptRequest(retriesLeft) {
         return new Promise((resolve, reject) => {
             const makeRequest = async (retriesLeft) => {
@@ -27,15 +30,9 @@ async function getDemoFile(matchId, demoUrl, retries = 3, delay = 60000) {
 
                     demWriteStream.on('finish', () => {
                         console.log('File download and extraction complete.');
+                        bz2ReadStream.destroy();
+                        demWriteStream.destroy();
                         resolve(localDemoFilePath);
-
-                        fs.unlink(localDemoBz2FilePath, (err) => {
-                            if (err) {
-                                console.error('Error deleting .bz2 file:', err);
-                            } else {
-                                console.log('.bz2 file deleted.');
-                            }
-                        });
                     });
 
                     demWriteStream.on('error', (error) => {

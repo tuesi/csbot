@@ -16,6 +16,7 @@ const newGameCheck = require('./new-game-check');
 const gameFileGetter = require('./game-file-getter');
 const gameParser = require('./parser/game-parser');
 const sendGameData = require('./send-game-data');
+const deleteFiles = require('./delete-files');
 
 const vacReport = require('./vac/vac-check');
 const playerGameStatus = require('./player-game-status/get-player-game-status');
@@ -82,17 +83,12 @@ async function getGameData(matchData, data) {
     if (matchData && matchData.length > 0) {
         for (const element of matchData[0].roundstatsall) {
             if (element.map) {
-                gameFileGetter.getDemoFile(matchData[0].matchid, element.map)
-                    .then(async (demoPath) => {
-                        if (demoPath) {
-                            var gameData = await gameParser.demofileParse(demoPath);
-                            await sendGameData.send(matchData[0].matchid, gameData);
-                        }
-                    })
-                    .catch(async (error) => {
-                        console.log('unable to download game data');
-                        await sendGameData.send(matchData[0].matchid, defaultGameData);
-                    })
+                const demoPath = await gameFileGetter.getDemoFile(matchData[0].matchid, element.map);
+                if (demoPath) {
+                    var gameData = await gameParser.demofileParse(demoPath);
+                    await sendGameData.send(matchData[0].matchid, gameData);
+                    await deleteFiles.deleteFiles(matchData[0].matchid);
+                }
                 break;
             }
         }
