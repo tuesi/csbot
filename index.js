@@ -62,7 +62,7 @@ csgo.on('connectedToGC', () => {
     //     getGameData(matchData, data);
     // });
     //csgo.requestGame("CSGO-n2t2x-xzLaN-S5CXf-fuvmE-bTsdA");
-    });
+});
 
 async function checkForNewGames() {
     const users = await newGameCheck.checkIfNewGamesAvailable();
@@ -105,8 +105,8 @@ async function getGameData(matchData, data) {
 
 //CSGO-n2t2x-xzLaN-S5CXf-fuvmE-bTsdA
 
-//const checkForGamesJon = Cron('*/5 * * * *', () => {checkForNewGames()});
-const checkForGamesJon = Cron('*/1 * * * *', () => {checkForNewGames()});
+const checkForGamesJon = Cron('*/5 * * * *', () => { checkForNewGames() });
+//const checkForGamesJon = Cron('*/1 * * * *', () => { checkForNewGames() });
 
 //node --inspect index.js   
 
