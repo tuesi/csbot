@@ -19,7 +19,7 @@ async function checkForVacBans() {
                 daysSinceMatch = Math.floor((currectDate - match.gameDate) / (1000 * 60 * 60 * 24));
             }
             let steamIds = [];
-            for(const player of match.playerStats) {
+            for (const player of match.playerStats) {
                 if (player.vac == false) {
                     steamIds.push(player.steamId);
                 }
@@ -40,9 +40,9 @@ async function checkForVacBans() {
                     await jimmy.sendCsVacBanDetails(vacReport);
                 }
             }
-            await delay(3000);
-                }
-            }
+            await delay(10000);
+        }
+    }
 }
 
 //76561198447475184 ID WITH VAC BAN
