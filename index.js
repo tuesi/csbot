@@ -88,6 +88,8 @@ async function getGameData(matchData, data) {
                     var gameData = await gameParser.demofileParse(demoPath);
                     await sendGameData.send(matchData[0].matchid, gameData);
                     await deleteFiles.deleteFiles(matchData[0].matchid);
+                    gameData = null;
+                    defaultGameData = null;
                 }
                 break;
             }

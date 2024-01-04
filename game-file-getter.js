@@ -30,9 +30,14 @@ async function getDemoFile(matchId, demoUrl, retries = 3, delay = 60000) {
 
                     demWriteStream.on('finish', () => {
                         console.log('File download and extraction complete.');
-                        bz2ReadStream.destroy();
-                        demWriteStream.destroy();
+                        bz2ReadStream.close();
+                        demWriteStream.close();
                         resolve(localDemoFilePath);
+                    });
+
+                    bz2ReadStream.on('error', (error) => {
+                        console.error('Error reading .bz2 file:', error);
+                        reject(error);
                     });
 
                     demWriteStream.on('error', (error) => {
