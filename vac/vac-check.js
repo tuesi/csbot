@@ -63,7 +63,6 @@ async function checkPlayerBans(url, daysSinceMatch) {
             }
             return vacIds;
         } else {
-            console.log(response);
             console.log('Failed to get VAC ban data.');
         }
     } catch (error) {
