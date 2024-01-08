@@ -83,17 +83,21 @@ async function getGameData(matchData, data) {
     if (matchData && matchData.length > 0) {
         for (const element of matchData[0].roundstatsall) {
             if (element.map) {
+                var gameData;
                 const demoPath = await gameFileGetter.getDemoFile(matchData[0].matchid, element.map);
                 if (demoPath) {
-                    var gameData = await gameParser.demofileParse(demoPath);
-                    await sendGameData.send(matchData[0].matchid, gameData);
-                    await deleteFiles.deleteFiles(matchData[0].matchid);
-                    gameData = null;
-                    defaultGameData = null;
+                    gameData = await gameParser.demofileParse(demoPath);
+                } else {
+                    gameData = defaultGameData;
                 }
+                await sendGameData.send(matchData[0].matchid, gameData);
+                await deleteFiles.deleteFiles(matchData[0].matchid);
+                gameData = null;
+                defaultGameData = null;
                 break;
             }
         }
+        return null;
     }
 }
 

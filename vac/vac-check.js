@@ -27,7 +27,7 @@ async function checkForVacBans() {
             if (steamIds.length > 0) {
                 let url = process.env.VAC_BAN_URL + process.env.STEAM_AUTH_KEY + "&steamids=" + steamIds;
                 let vacIds = await checkPlayerBans(url, daysSinceMatch);
-                if (vacIds && vacIds.length > 0) {
+                if (vacIds != null && vacIds && vacIds.length > 0) {
                     for (const player of match.playerStats) {
                         if (vacIds.includes(player.steamId)) {
                             player.vac = true;
@@ -62,11 +62,18 @@ async function checkPlayerBans(url, daysSinceMatch) {
                 });
             }
             return vacIds;
-        } else {
+        } else if (response.status === 501) {
+            console.log('too many requests - waiting');
+            await delay(50000);
+            checkPlayerBans(url, daysSinceMatch);
+        }
+        else {
             console.log('Failed to get VAC ban data.');
+            return null;
         }
     } catch (error) {
         console.error('Error while fetching VAC ban data:', error);
+        return null;
     }
 }
 
