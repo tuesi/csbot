@@ -18,14 +18,9 @@ async function checkForVacBans() {
             if (match.gameDate) {
                 daysSinceMatch = Math.floor((currectDate - match.gameDate) / (1000 * 60 * 60 * 24));
             }
-            let steamIds = [];
-            for (const player of match.playerStats) {
-                if (player.vac == false) {
-                    steamIds.push(player.steamId);
-                }
-            }
+            let steamIds = match.playerStats.filter(player => !player.vac).map(player => player.steamId);
             if (steamIds.length > 0) {
-                let url = process.env.VAC_BAN_URL + process.env.STEAM_AUTH_KEY + "&steamids=" + steamIds;
+                let url = process.env.VAC_BAN_URL + process.env.STEAM_AUTH_KEY + "&steamids=" + steamIds.join(",");
                 let vacIds = await checkPlayerBans(url, daysSinceMatch);
                 if (vacIds != null && vacIds && vacIds.length > 0) {
                     for (const player of match.playerStats) {
@@ -43,6 +38,7 @@ async function checkForVacBans() {
             await delay(10000);
         }
     }
+    foundMatch = null;
 }
 
 //76561198447475184 ID WITH VAC BAN
@@ -62,7 +58,7 @@ async function checkPlayerBans(url, daysSinceMatch) {
                 });
             }
             return vacIds;
-        } else if (response.status === 501) {
+        } else if (response.status === 502) {
             console.log('too many requests - waiting');
             await delay(50000);
             checkPlayerBans(url, daysSinceMatch);

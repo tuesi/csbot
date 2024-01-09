@@ -92,11 +92,11 @@ async function getGameData(matchData, data) {
                 }
                 await sendGameData.send(matchData[0].matchid, gameData);
                 await deleteFiles.deleteFiles(matchData[0].matchid);
-                gameData = null;
-                defaultGameData = null;
                 break;
             }
         }
+        gameData = null;
+        defaultGameData = null;
         return null;
     }
 }
