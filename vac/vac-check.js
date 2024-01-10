@@ -11,7 +11,7 @@ function delay(ms) {
 async function checkForVacBans() {
     console.log("vac check");
     const currectDate = new Date();
-    const foundMatch = await GameData.find().exec();
+    let foundMatch = await GameData.find().exec();
     if (foundMatch.length > 0) {
         for (const match of foundMatch) {
             let daysSinceMatch = 300;
@@ -64,6 +64,7 @@ async function checkPlayerBans(url, daysSinceMatch) {
             checkPlayerBans(url, daysSinceMatch);
         }
         else {
+            console.log(response);
             console.log('Failed to get VAC ban data.');
             return null;
         }
