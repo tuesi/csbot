@@ -30,8 +30,20 @@ async function getDemoFile(matchId, demoUrl, retries = 3, delay = 60000) {
 
                     demWriteStream.on('finish', () => {
                         console.log('File download and extraction complete.');
-                        bz2ReadStream.close();
-                        demWriteStream.close();
+                        fs.close(bz2ReadStream, (err) => {
+                            if (err)
+                                console.error('Failed to close file', err);
+                            else {
+                                console.log("\n> File Closed successfully");
+                            }
+                        });
+                        fs.close(demWriteStream, (err) => {
+                            if (err)
+                                console.error('Failed to close file', err);
+                            else {
+                                console.log("\n> File Closed successfully");
+                            }
+                        });
                         resolve(localDemoFilePath);
                     });
 

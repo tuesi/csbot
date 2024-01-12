@@ -47,8 +47,8 @@ async function checkPlayerBans(url, daysSinceMatch) {
     try {
         const response = await axios.get(url);
 
-        if (response.ok) {
-            const data = await response.json();
+        if (response.status === 200) {
+            const data = await response.data;
             const vacIds = [];
             if (data && data.players && Array.isArray(data.players)) {
                 data.players.forEach(player => {
@@ -58,7 +58,7 @@ async function checkPlayerBans(url, daysSinceMatch) {
                 });
             }
             return vacIds;
-        } else if (response.status === 502) {
+        } else if (response.status === 429) {
             console.log('too many requests - waiting');
             await delay(50000);
             checkPlayerBans(url, daysSinceMatch);
