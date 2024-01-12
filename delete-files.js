@@ -38,6 +38,8 @@ async function deleteFiles(matchId) {
             console.log('File deleted successfully');
         });
     });
+
+    global.gc();
 }
 
 module.exports = { deleteFiles };
