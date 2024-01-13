@@ -53,10 +53,6 @@ async function demofileParse(demoPath) {
         roundEnd = null;
         playersEachRound = null;
 
-        parseEvent = null;
-        parseHeader = null;
-        parsePlayerInfo = null;
-
         return matchDetails;
 
         //winner 2 = terrorist
