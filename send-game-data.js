@@ -5,7 +5,7 @@ const jimmyApi = require('./jimmy');
 
 async function send(matchId, data) {
     try {
-        let users = await User.find({ matchId: matchId, lastMatchDataSend: false }).exec();
+        const users = await User.find({ matchId: matchId, lastMatchDataSend: false }).exec();
         //const users = await User.find().exec();
         let lastMatchId = null;
         if (users.length > 0) {
@@ -31,7 +31,6 @@ async function send(matchId, data) {
         await jimmyApi.sendCsMatchDetails(data);
 
         data = null;
-        users = null;
         return true;
     } catch (err) {
         console.error('Error sending data:', err);
@@ -40,7 +39,7 @@ async function send(matchId, data) {
 }
 
 async function saveGameData(data, matchId) {
-    let game = await GameData.find({ matchId: matchId }).exec();
+    const game = await GameData.find({ matchId: matchId }).exec();
     if (game.length == 0) {
         console.log('new game saving');
         data.gameDate = new Date();
