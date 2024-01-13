@@ -1,4 +1,4 @@
-var { parseEvent, parseTicks, parseHeader, parsePlayerInfo, listGameEvents, parseEvents } = require('@laihoe/demoparser2');
+var { parseEvent, parseHeader, parsePlayerInfo } = require('@laihoe/demoparser2');
 
 const PlayerStat = require('../models/user-game-data');
 const MatchDetails = require('../models/match-details');
@@ -52,6 +52,10 @@ async function demofileParse(demoPath) {
         playerHurtEvents = null;
         roundEnd = null;
         playersEachRound = null;
+
+        parseEvent = null;
+        parseHeader = null;
+        parsePlayerInfo = null;
 
         return matchDetails;
 
