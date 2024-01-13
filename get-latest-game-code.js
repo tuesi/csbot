@@ -7,8 +7,8 @@ function delay(ms) {
 // Function to make a new API call with a code
 async function makeAPICallWithCode(steamId, authId, matchId) {
     try {
-        const response = await axios.get(`https://api.steampowered.com/ICSGOPlayers_730/GetNextMatchSharingCode/v1?key=${process.env.STEAM_AUTH_KEY}&steamid=${steamId}&steamidkey=${authId}&knowncode=${matchId}`);
-        const data = response.data;
+        let response = await axios.get(`https://api.steampowered.com/ICSGOPlayers_730/GetNextMatchSharingCode/v1?key=${process.env.STEAM_AUTH_KEY}&steamid=${steamId}&steamidkey=${authId}&knowncode=${matchId}`);
+        let data = response.data;
         // Check if there is a "nextcode" in the response
 
         //{ result: { nextcode: 'n/a' } }
@@ -19,9 +19,13 @@ async function makeAPICallWithCode(steamId, authId, matchId) {
             await delay(500);
             return makeAPICallWithCode(steamId, authId, nextCode);
         } else if (data.status === 412) {
+            response = null;
+            data = null;
             return null;
         } else {
             //console.log('returning' + matchId);
+            response = null;
+            data = null;
             return matchId;
         }
     } catch (error) {

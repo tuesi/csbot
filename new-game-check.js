@@ -8,7 +8,7 @@ async function checkIfNewGamesAvailable() {
 
     try {
         // Find all users in the database
-        const users = await User.find({}).exec();
+        let users = await User.find({}).exec();
 
         // Iterate through each user
         for (const user of users) {
@@ -40,6 +40,7 @@ async function checkIfNewGamesAvailable() {
                 console.log(`Updated user ${user.discordId}'s lastMatchId`);
             }
         }
+        users = null;
         return updatedUsers;
     } catch (error) {
         console.error('Error:', error);
