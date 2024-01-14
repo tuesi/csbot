@@ -29,8 +29,7 @@ let csgo = new GlobalOffensive(user);
 
 mongoose.connect(process.env.MONGOOSE, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-    poolSize: 10,
+    useUnifiedTopology: true
 });
 
 mongoose.connection.on('connected', () => {
