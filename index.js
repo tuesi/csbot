@@ -27,7 +27,11 @@ let user = new SteamUser();
 const community = new SteamCommunity();
 let csgo = new GlobalOffensive(user);
 
-mongoose.connect(process.env.MONGOOSE);
+mongoose.connect(process.env.MONGOOSE, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    poolSize: 10,
+});
 
 mongoose.connection.on('connected', () => {
     console.log('Mongoose is connected');
