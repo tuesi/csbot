@@ -34,8 +34,6 @@ mongoose.connection.on('connected', () => {
     console.log('Mongoose is connected');
 });
 
-memwatch.on('stats', function (stats) { console.log(stats); });
-
 user.on('loggedOn', () => {
     console.log('Logged into Steam as ' + user.steamID.getSteam3RenderedID());
     user.setPersona(SteamUser.EPersonaState.Online);
