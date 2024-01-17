@@ -29,7 +29,6 @@
     "mongodb": "^6.3.0",
     "mongoose": "^8.0.4",
     "node-fetch": "^2.6.1",
-    "node-memwatch-new": "^0.0.3",
     "steam-user": "^5.0.1",
     "steamcommunity": "^3.46.1",
     "unbzip2-stream": "^1.4.3",

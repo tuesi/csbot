@@ -11,7 +11,6 @@ const bodyParser = require('body-parser');
 const { Cron } = require("croner");
 const cors = require('cors');
 require('dotenv').config();
-var memwatch = require('node-memwatch-new');
 
 const newGameCheck = require('./new-game-check');
 const gameFileGetter = require('./game-file-getter');
@@ -80,7 +79,6 @@ csgo.on('matchList', async (matchData, data) => {
 });
 
 async function getGameData(matchData, data) {
-    var hd = new memwatch.HeapDiff();
     var defaultGameData = defaultDataParser.defaultDataParser(matchData);
     if (matchData && matchData.length > 0) {
         for (const element of matchData[0].roundstatsall) {
@@ -99,8 +97,6 @@ async function getGameData(matchData, data) {
         }
         gameData = null;
         defaultGameData = null;
-        var diff = hd.end();
-        console.log(diff);
         return null;
     }
 }
