@@ -9,7 +9,7 @@
   "author": "TadasA",
   "license": "ISC",
   "engines": {
-    "node": "20"
+    "node": "21"
   },
   "dependencies": {
     "@laihoe/demoparser2": "^0.9.1",
