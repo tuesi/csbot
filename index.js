@@ -84,10 +84,10 @@ async function getGameData(matchData, data) {
         for (const element of matchData[0].roundstatsall) {
             if (element.map) {
                 var gameData;
-                const demoPath = await gameFileGetter.getDemoFile(matchData[0].matchid, element.map);
-                if (demoPath) {
+                try {
+                    const demoPath = await gameFileGetter.getDemoFile(matchData[0].matchid, element.map);
                     gameData = await gameParser.demofileParse(demoPath);
-                } else {
+                } catch {
                     gameData = defaultGameData;
                 }
                 await sendGameData.send(matchData[0].matchid, gameData);
