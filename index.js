@@ -62,7 +62,7 @@ csgo.on('connectedToGC', () => {
     // csgo.once('matchList', async (matchData, data) => {
     //     getGameData(matchData, data);
     // });
-    //csgo.requestGame("CSGO-n2t2x-xzLaN-S5CXf-fuvmE-bTsdA");
+    //csgo.requestGame("CSGO-5UXHm-fxzK8-rjYrk-TSPEx-zWq7C");
 });
 
 async function checkForNewGames() {
@@ -87,8 +87,11 @@ async function getGameData(matchData, data) {
                 try {
                     const demoPath = await gameFileGetter.getDemoFile(matchData[0].matchid, element.map);
                     gameData = await gameParser.demofileParse(demoPath);
+                    if (!gameData) {
+                        gameData = defaultGameData;
+                    }
                 } catch (error) {
-                    console.error("Demo path or parser failed", error);
+                    console.error("Demo path or parser failed: ", error);
                     gameData = defaultGameData;
                 }
                 await sendGameData.send(matchData[0].matchid, gameData);
