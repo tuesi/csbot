@@ -87,7 +87,8 @@ async function getGameData(matchData, data) {
                 try {
                     const demoPath = await gameFileGetter.getDemoFile(matchData[0].matchid, element.map);
                     gameData = await gameParser.demofileParse(demoPath);
-                } catch {
+                } catch (error) {
+                    console.error("Demo path or parser failed", error);
                     gameData = defaultGameData;
                 }
                 await sendGameData.send(matchData[0].matchid, gameData);
