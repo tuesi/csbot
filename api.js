@@ -5,7 +5,7 @@ const GameData = require('./mongodb/game-db-model');
 const APIUser = require('./mongodb/api-user-model');
 const getGameCode = require('./get-latest-game-code');
 const getMatchId = require('./get-match-id');
-const fetch = require('node-fetch');
+const axios = require('axios');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { verifyToken } = require('./token');
@@ -138,11 +138,13 @@ const getPlayerData = async (player) => {
 
 async function getSteamUserData(steamId) {
     const url = process.env.STEAM_URL + process.env.STEAM_AUTH_KEY + "&format=json&steamids=" + steamId;
-    let response = await fetch(url, {
-        method: 'GET'
-    });
-    let resp = await response.json();
-    return resp.response.players;
+    try {
+        const response = await axios.get(url);
+        return response.data.response.players;
+    } catch (error) {
+        console.error('Error fetching Steam user data:', error);
+        return null;
+    }
 }
 
 module.exports = router;

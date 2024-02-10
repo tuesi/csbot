@@ -1,21 +1,19 @@
-const fetch = require('node-fetch');
+const axios = require('axios');
 const loginData = { username: process.env.API_USERNAME, password: process.env.API_PASSWORD };
 
 var token;
 var retryWithNewToken = false;
 
 async function getApiToken() {
-    const tokenResponse = await fetch(process.env.JIMMY_URL + "v1/auth/login", {
-        method: 'POST',
+    const tokenResponse = await axios.post(process.env.JIMMY_URL + "v1/auth/login", loginData, {
         headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(loginData)
+        }
     });
 
     console.log(tokenResponse);
-    if (tokenResponse.status == 200) {
-        const tokenData = await tokenResponse.json();
+    if (tokenResponse.status === 200) {
+        const tokenData = await tokenResponse.data;
         token = tokenData.token;
     }
 }
@@ -29,13 +27,11 @@ async function sendCsMatchDetails(details) {
     const resolvedDetails = await details;
 
     try {
-        let response = await fetch(process.env.JIMMY_URL + "v1/cs/recent-game", {
-            method: 'POST',
+        let response = await axios.post(process.env.JIMMY_URL + "v1/cs/recent-game", resolvedDetails, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(resolvedDetails)
+            }
         });
         console.log(response);
         if (response.status === 403 || response.status === 500) {
@@ -66,13 +62,11 @@ async function sendCsVacBanDetails(details) {
     const resolvedDetails = await details;
 
     try {
-        let response = await fetch(process.env.JIMMY_URL + "v1/cs/vac-report", {
-            method: 'POST',
+        let response = await axios.post(process.env.JIMMY_URL + "v1/cs/vac-report", resolvedDetails, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(resolvedDetails)
+            }
         });
         if (response.status === 403) {
             await getApiToken();
@@ -92,13 +86,11 @@ async function sendCsMatchBetDetails(details) {
     const resolvedDetails = await details;
 
     try {
-        let response = await fetch(process.env.JIMMY_URL + "v1/cs/game-start", {
-            method: 'POST',
+        let response = await axios.post(process.env.JIMMY_URL + "v1/cs/game-start", resolvedDetails, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(resolvedDetails)
+            }
         });
         if (response.status === 403) {
             await getApiToken();

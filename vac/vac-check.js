@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 const VacReport = require('../models/vac-report');
 const GameData = require('../mongodb/game-db-model');
 const jimmy = require('../jimmy');
