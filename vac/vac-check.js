@@ -57,7 +57,7 @@ async function checkPlayerBans(url, daysSinceMatch) {
                 });
             }
             return vacIds;
-        } else if (response.status === 429) {
+        } else if (response.status === 429 || response.status === 502) {
             console.log('too many requests - waiting');
             await delay(50000);
             checkPlayerBans(url, daysSinceMatch);

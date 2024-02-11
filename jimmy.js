@@ -46,9 +46,8 @@ async function sendCsMatchDetails(details) {
             }
         }
         retryWithNewToken = false;
-    } catch {
-        console.log(response);
-        console.log('error sending cs data');
+    } catch (error) {
+        console.error('Error sending cs data', error);
         retryWithNewToken = false;
     }
 }
