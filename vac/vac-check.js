@@ -68,6 +68,11 @@ async function checkPlayerBans(url, daysSinceMatch) {
             return null;
         }
     } catch (error) {
+        if (error.response && error.response.status === 502) {
+            console.log('502 Bad Gateway received - waiting');
+            await delay(50000);
+            checkPlayerBans(url, daysSinceMatch);
+        }
         console.error('Error while fetching VAC ban data:', error);
         return null;
     }
