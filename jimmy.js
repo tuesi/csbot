@@ -33,21 +33,18 @@ async function sendCsMatchDetails(details) {
                 'Content-Type': 'application/json'
             }
         });
-        console.log(response);
-        if (response.status === 403 || response.status === 500) {
+    } catch (error) {
+        if (response && (error.response.status === 403 || error.response.status === 500)) {
             // Retry with a new token only once
             if (!retryWithNewToken) {
                 console.error('Token issue detected. Attempting to refresh token and retrying.');
                 retryWithNewToken = true;
                 await getApiToken();
-                await sendCsMatchDetails(details);
+                await sendCsMatchDetails(resolvedDetails);
             } else {
                 console.error('Retry with new token already attempted. Not retrying again.');
             }
         }
-        retryWithNewToken = false;
-    } catch (error) {
-        console.error('Error sending cs data', error);
         retryWithNewToken = false;
     }
 }
@@ -67,11 +64,11 @@ async function sendCsVacBanDetails(details) {
                 'Content-Type': 'application/json'
             }
         });
-        if (response.status === 403) {
+    } catch (error) {
+        if (response && error.response.status === 403) {
             await getApiToken();
-            await sendCsVacBanDetails(details);
+            await sendCsVacBanDetails(resolvedDetails);
         }
-    } catch {
         console.log('error sending cs data');
     }
 }
@@ -93,7 +90,7 @@ async function sendCsMatchBetDetails(details) {
         });
         if (response.status === 403) {
             await getApiToken();
-            await sendCsMatchBetDetails(details);
+            await sendCsMatchBetDetails(resolvedDetails);
         }
     } catch {
         console.log('error sending cs data');
