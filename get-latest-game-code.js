@@ -16,7 +16,7 @@ async function makeAPICallWithCode(steamId, authId, matchId) {
             const nextCode = data.result.nextcode;
             console.log(`Received code: ${nextCode}`);
             // Make a recursive call with the new code
-            await delay(500);
+            await delay(1000);
             return makeAPICallWithCode(steamId, authId, nextCode);
         } else if (data.status === 412) {
             response = null;
@@ -28,6 +28,7 @@ async function makeAPICallWithCode(steamId, authId, matchId) {
         }
     } catch (error) {
         console.error('Error making API call with code:', error.message);
+        await delay(60000);
         return null;
     }
 }

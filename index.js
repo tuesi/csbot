@@ -66,11 +66,15 @@ csgo.on('connectedToGC', () => {
 });
 
 async function checkForNewGames() {
-    const users = await newGameCheck.checkIfNewGamesAvailable();
-    if (users && users.length > 0) {
-        users.forEach(async user => {
-            csgo.requestGame(user.lastMatchId);
-        });
+    try {
+        const users = await newGameCheck.checkIfNewGamesAvailable();
+        if (users && users.length > 0) {
+            users.forEach(async user => {
+                csgo.requestGame(user.lastMatchId);
+            });
+        }
+    } catch (error) {
+        console.error("Error while getting latest game codes: ", error);
     }
 }
 

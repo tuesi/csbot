@@ -11,7 +11,7 @@ async function getApiToken() {
         }
     });
 
-    console.log(tokenResponse);
+    //console.log(tokenResponse);
     if (tokenResponse.status === 200) {
         const tokenData = await tokenResponse.data;
         token = tokenData.token;
@@ -34,15 +34,15 @@ async function sendCsMatchDetails(details) {
             }
         });
     } catch (error) {
-        if (response && (error.response.status === 403 || error.response.status === 500)) {
+        if (error.response && (error.response.status === 403 || error.response.status === 500)) {
             // Retry with a new token only once
             if (!retryWithNewToken) {
-                console.error('Token issue detected. Attempting to refresh token and retrying.');
+                console.error('Token issue detected. Attempting to refresh token and retrying.', error);
                 retryWithNewToken = true;
                 await getApiToken();
                 await sendCsMatchDetails(resolvedDetails);
             } else {
-                console.error('Retry with new token already attempted. Not retrying again.');
+                console.error('Retry with new token already attempted. Not retrying again.', error);
             }
         }
         retryWithNewToken = false;
@@ -65,7 +65,7 @@ async function sendCsVacBanDetails(details) {
             }
         });
     } catch (error) {
-        if (response && error.response.status === 403) {
+        if (error.response && error.response.status === 403) {
             await getApiToken();
             await sendCsVacBanDetails(resolvedDetails);
         }
