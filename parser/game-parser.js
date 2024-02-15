@@ -1,4 +1,4 @@
-var { parseEvent, parseHeader, parsePlayerInfo } = require('@laihoe/demoparser2');
+var { parseEvent, parseHeader, parsePlayerInfo, listGameEvents } = require('@laihoe/demoparser2');
 
 const PlayerStat = require('../models/user-game-data');
 const MatchDetails = require('../models/match-details');
@@ -17,17 +17,21 @@ async function demofileParse(demoPath) {
 
         let players = parsePlayerInfo(demoPath);
 
-        //let events = listGameEvents(demoPath);
-        //console.log(events);
+        let events = listGameEvents(demoPath);
+        console.log(events);
 
         let other_death = parseEvent(demoPath, "other_death");
         let scores = parseEvent(demoPath, 'rank_update', ["team_name", "mvps", "player_steamid", "score", "total_cash_spent", "kills_total", "deaths_total", "assists_total", "headshot_kills_total", "damage_total", "utility_damage_total", "enemies_flashed_total", "team_rounds_total", "ace_rounds_total", "4k_rounds_total", "3k_rounds_total"]);
         let flash = parseEvent(demoPath, 'player_blind', ["team_name"], ["is_warmup_period"]);
         let kills = parseEvent(demoPath, "player_death", ["player_steamid", "active_weapon_name", "active_weapon", "item_def_idx", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name"]);
         let playerHurtEvents = parseEvent(demoPath, "player_hurt", ["player_steamid", "active_weapon_name", "item_def_idx"], ["total_rounds_played", "is_warmup_period"]);
-        let roundEnd = parseEvent(demoPath, "round_end", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t", "is_rescuing", "round_win_reason", "objective_total"]);
+        //let roundEnd = parseEvent(demoPath, "round_end", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t", "is_rescuing", "round_win_reason", "objective_total"]);
         let playersEachRound = parseEvent(demoPath, "player_spawn", ["player_steamid", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
         //var hostage = parseEvent(demoPath, "hostage_rescued", ["player_steamid", "time"], ["total_rounds_played", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
+
+        let roundEnd = parseEvent(demoPath, "round_officially_ended", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t", "is_rescuing", "round_win_reason", "objective_total", "round_win_status"]);
+
+        console.log(end);
 
         players.forEach(player => {
             allPlayerStats.push(getDataForPlayer(player.steamid, player.name, player.team_number, other_death, scores, flash, kills, playerHurtEvents, roundEnd, playersEachRound));
@@ -86,7 +90,7 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
 
     let userTeam = userScore[0].user_team_name;
 
-    let maxRound = Math.max(...roundEnd.map(o => o.total_rounds_played));
+    let maxRound = Math.max(...kills.map(o => o.total_rounds_played));
 
     //FLASH
     let flashNoWarmup = flash.filter(fl => fl.is_warmup_period == false);
@@ -172,7 +176,9 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
 
     //ROUND END
 
-    let roundEndInTeamWin = roundEnd.filter(round => round.winner == team);
+    //OLD ROUND END
+    //let roundEndInTeamWin = roundEnd.filter(round => round.winner == team);
+    let roundEndInTeamWin = roundEnd.filter(round => round.round_win_status == team);
     //round.attacker_steamid == null to account for cluches where dead by c4
 
     //TODO Also filter wins where hostage been rescued 
