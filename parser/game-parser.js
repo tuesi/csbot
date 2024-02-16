@@ -17,8 +17,8 @@ async function demofileParse(demoPath) {
 
         let players = parsePlayerInfo(demoPath);
 
-        let events = listGameEvents(demoPath);
-        console.log(events);
+        //let events = listGameEvents(demoPath);
+        //console.log(events);
 
         let other_death = parseEvent(demoPath, "other_death");
         let scores = parseEvent(demoPath, 'rank_update', ["team_name", "mvps", "player_steamid", "score", "total_cash_spent", "kills_total", "deaths_total", "assists_total", "headshot_kills_total", "damage_total", "utility_damage_total", "enemies_flashed_total", "team_rounds_total", "ace_rounds_total", "4k_rounds_total", "3k_rounds_total"]);
@@ -31,7 +31,7 @@ async function demofileParse(demoPath) {
 
         let roundEnd = parseEvent(demoPath, "round_officially_ended", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t", "is_rescuing", "round_win_reason", "objective_total", "round_win_status"]);
 
-        console.log(end);
+        //console.log(end);
 
         players.forEach(player => {
             allPlayerStats.push(getDataForPlayer(player.steamid, player.name, player.team_number, other_death, scores, flash, kills, playerHurtEvents, roundEnd, playersEachRound));
