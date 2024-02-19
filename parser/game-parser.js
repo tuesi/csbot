@@ -23,7 +23,7 @@ async function demofileParse(demoPath) {
         let other_death = parseEvent(demoPath, "other_death");
         let scores = parseEvent(demoPath, 'rank_update', ["team_name", "mvps", "player_steamid", "score", "total_cash_spent", "kills_total", "deaths_total", "assists_total", "headshot_kills_total", "damage_total", "utility_damage_total", "enemies_flashed_total", "team_rounds_total", "ace_rounds_total", "4k_rounds_total", "3k_rounds_total"]);
         let flash = parseEvent(demoPath, 'player_blind', ["team_name"], ["is_warmup_period"]);
-        let kills = parseEvent(demoPath, "player_death", ["player_steamid", "active_weapon_name", "active_weapon", "item_def_idx", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name"]);
+        let kills = parseEvent(demoPath, "player_death", ["player_steamid", "active_weapon_name", "active_weapon", "item_def_idx", "time", "team_num", "team_name"], ["total_rounds_played", "is_warmup_period", "team_name"]);
         let playerHurtEvents = parseEvent(demoPath, "player_hurt", ["player_steamid", "active_weapon_name", "item_def_idx"], ["total_rounds_played", "is_warmup_period"]);
         //let roundEnd = parseEvent(demoPath, "round_end", ["player_steamid", "time"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t", "is_rescuing", "round_win_reason", "objective_total"]);
         let playersEachRound = parseEvent(demoPath, "player_spawn", ["player_steamid", "time", "team_num"], ["total_rounds_played", "is_warmup_period", "team_name", "num_player_alive_ct", "num_player_alive_t"]);
@@ -98,7 +98,7 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
     let userTeamFlash = teamFlash.filter(fl => fl.attacker_steamid == steamId);
 
     //KILLS
-    let killsNoWarmup = kills.filter(fl => fl.is_warmup_period == false);
+    let killsNoWarmup = kills.filter(fl => fl.is_warmup_period == false && fl.attacker_team_num != fl.user_team_num);
     let deagleKills = killsNoWarmup.filter(kill => kill.attacker_item_def_idx == 1 && kill.headshot == true);
     let userDeagleKills = deagleKills.filter(kill => kill.attacker_steamid == steamId);
 
@@ -118,7 +118,7 @@ function getDataForPlayer(steamId, name, team, other_death, scores, flash, kills
     }
 
     //PLAYERHURTEVENTS
-    let playerHurtEventsNoWarmup = playerHurtEvents.filter(fl => fl.is_warmup_period == false);
+    let playerHurtEventsNoWarmup = playerHurtEvents.filter(fl => fl.is_warmup_period == false && fl.attacker_team_num != fl.user_team_num);
     let heDmg = playerHurtEventsNoWarmup.filter(e => e.weapon == "hegrenade" && e.attacker_steamid == steamId)
     let molotovDmg = playerHurtEventsNoWarmup.filter(e => (e.weapon == "molotov" || e.weapon == "inferno") && e.attacker_steamid == steamId);
 
