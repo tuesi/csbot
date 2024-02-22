@@ -12,7 +12,7 @@
     "node": "21"
   },
   "dependencies": {
-    "@laihoe/demoparser2": "^0.18.0",
+    "@laihoe/demoparser2": "^0.19.0",
     "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
     "bignumber.js": "^9.1.2",
