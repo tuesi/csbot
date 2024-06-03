@@ -59,13 +59,13 @@ router.get('/update', verifyToken, async (req, res) => {
         return res.status(400).json({ error: 'Missing required parameters' });
     }
 
-    const existingUser = await User.find({ discordId }).exec();
+    const existingUser = await User.findOne({ discordId }).exec();
 
     if (!existingUser) {
         return res.status(400).json({ error: `User not found!` });
     } else {
         try {
-            const newLastMatchId = await getGameCode.makeAPICallWithCode(existingUser[0].steamId, existingUser[0].matchAuthId, lastMatchId);
+            const newLastMatchId = await getGameCode.makeAPICallWithCode(existingUser.steamId, existingUser.matchAuthId, lastMatchId);
             const matchId = await getMatchId.getMatchId(newLastMatchId);
 
             // Update user with new match id
@@ -73,7 +73,7 @@ router.get('/update', verifyToken, async (req, res) => {
             existingUser.matchId = matchId;
             existingUser.lastMatchUpdate = new Date();
             existingUser.lastMatchDataSend = false;
-            await existingUser[0].save();
+            await existingUser.save();
             res.json({ message: 'Data updated to MongoDB' });
         } catch (error) {
             console.error('Error saving data to MongoDB:', error);
