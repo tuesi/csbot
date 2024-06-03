@@ -67,6 +67,9 @@ router.get('/update', verifyToken, async (req, res) => {
             const newLastMatchId = await getGameCode.makeAPICallWithCode(existingUser.steamId, existingUser.matchAuthId, lastMatchId);
             const matchId = await getMatchId.getMatchId(newLastMatchId);
 
+            console.log(newLastMatchId);
+            console.log(matchId);
+
             // Update user with new match id
             existingUser.lastMatchId = newLastMatchId;
             existingUser.matchId = matchId;
