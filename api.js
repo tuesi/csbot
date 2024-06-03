@@ -73,7 +73,7 @@ router.get('/update', verifyToken, async (req, res) => {
             existingUser.matchId = matchId;
             existingUser.lastMatchUpdate = new Date();
             existingUser.lastMatchDataSend = false;
-            await existingUser.save();
+            await existingUser[0].save();
             res.json({ message: 'Data updated to MongoDB' });
         } catch (error) {
             console.error('Error saving data to MongoDB:', error);
