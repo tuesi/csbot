@@ -60,6 +60,10 @@ router.get('/update', verifyToken, async (req, res) => {
     }
 
     const existingUser = await User.find({ discordId }).exec();
+
+    console.log(discordId);
+    console.log(lastMatchId);
+
     if (!existingUser) {
         return res.status(400).json({ error: `User not found!` });
     } else {
