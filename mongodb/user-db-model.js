@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
     lastMatchId: String,
     matchId: String,
     firstMatchId: String,
-    lastMatchDataSend: Boolean
+    lastMatchDataSend: Boolean,
+    lastMatchUpdate: Date
 });
 
 const User = mongoose.model('User', userSchema);

@@ -14,6 +14,7 @@ async function send(matchId, data) {
         for (const user of users) {
             // Update lastMatchDataSend to true
             user.lastMatchDataSend = true;
+            user.lastMatchUpdate = new Date();
             await user.save(); // Save the updated user document
 
             //console.log(data.playerStats);

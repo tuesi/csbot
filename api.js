@@ -39,7 +39,8 @@ router.get('/register', verifyToken, async (req, res) => {
                 lastMatchId: newLastMatchId,
                 matchId,
                 firstMatchId: lastMatchId,
-                lastMatchDataSend
+                lastMatchDataSend,
+                lastMatchUpdate: new Date()
             });
 
             await newUser.save();

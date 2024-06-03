@@ -1,4 +1,4 @@
-var { parseEvent, parseHeader, parsePlayerInfo, listGameEvents } = require('@laihoe/demoparser2');
+var { parseEvent, parseHeader, parsePlayerInfo } = require('@laihoe/demoparser2');
 
 const PlayerStat = require('../models/user-game-data');
 const MatchDetails = require('../models/match-details');
