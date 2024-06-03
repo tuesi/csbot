@@ -4,8 +4,8 @@ async function deleteFiles(matchId) {
     const localDemoBz2FilePath = `/demos/currentDemo${matchId}.dem.bz2`;
     const localDemoFilePath = `/demos/currentDemo${matchId}.dem`;
 
-    // const localDemoBz2FilePath = `currentDemo${matchId}.dem.bz2`;
-    // const localDemoFilePath = `currentDemo${matchId}.dem`;
+    //const localDemoBz2FilePath = `currentDemo${matchId}.dem.bz2`;
+    //const localDemoFilePath = `currentDemo${matchId}.dem`;
 
     fs.access(localDemoBz2FilePath, fs.constants.F_OK, (err) => {
         if (err) {
@@ -38,8 +38,6 @@ async function deleteFiles(matchId) {
             console.log('File deleted successfully');
         });
     });
-
-    global.gc();
 }
 
 module.exports = { deleteFiles };
