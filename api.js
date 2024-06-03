@@ -60,6 +60,7 @@ router.get('/update', verifyToken, async (req, res) => {
     }
 
     const existingUser = await User.find({ discordId }).exec();
+    console.log(existingUser);
 
     console.log(discordId);
     console.log(lastMatchId);
