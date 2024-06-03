@@ -60,22 +60,13 @@ router.get('/update', verifyToken, async (req, res) => {
     }
 
     const existingUser = await User.find({ discordId }).exec();
-    console.log(existingUser);
-    console.log(existingUser.steamId);
-    console.log(existingUser.matchAuthId);
-
-    console.log(discordId);
-    console.log(lastMatchId);
 
     if (!existingUser) {
         return res.status(400).json({ error: `User not found!` });
     } else {
         try {
-            const newLastMatchId = await getGameCode.makeAPICallWithCode(existingUser.steamId, existingUser.matchAuthId, lastMatchId);
+            const newLastMatchId = await getGameCode.makeAPICallWithCode(existingUser[0].steamId, existingUser[0].matchAuthId, lastMatchId);
             const matchId = await getMatchId.getMatchId(newLastMatchId);
-
-            console.log(newLastMatchId);
-            console.log(matchId);
 
             // Update user with new match id
             existingUser.lastMatchId = newLastMatchId;
