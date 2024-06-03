@@ -52,25 +52,50 @@ router.get('/register', verifyToken, async (req, res) => {
     }
 });
 
-router.post('/api-register', async (req, res) => {
-    const { username, password } = req.body;
+router.get('/update', verifyToken, async (req, res) => {
+    // Check if all required parameters are provided
+    const { lastMatchId, discordId } = req.query;
+    if (!lastMatchId || !discordId) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+    }
 
-    // Hash the user's password before storing it
-    const hashedPassword = await bcrypt.hash(password, 10); // Hashing the password
+    const existingUser = await User.find({ discordId }).exec();
+    try {
+        const newLastMatchId = await getGameCode.makeAPICallWithCode(existingUser.steamId, existingUser.matchAuthId, lastMatchId);
+        const matchId = await getMatchId.getMatchId(newLastMatchId);
 
-    // Create a new user in the database
-    const newAPIUser = new APIUser({ username, password: hashedPassword });
-
-    // Save the user details to MongoDB
-    newAPIUser.save()
-        .then(savedUser => {
-            res.json({ message: 'User registered successfully' });
-        })
-        .catch(error => {
-            console.error('Error registering user:', error);
-            res.status(500).json({ error: 'Failed to register user' });
-        });
+        // Update user with new match id
+        existingUser.lastMatchId = newLastMatchId;
+        existingUser.matchId = matchId;
+        existingUser.lastMatchUpdate = new Date();
+        existingUser.lastMatchDataSend = false;
+        await existingUser.save();
+        res.json({ message: 'Data updated to MongoDB' });
+    } catch (error) {
+        console.error('Error saving data to MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
+
+// router.post('/api-register', async (req, res) => {
+//     const { username, password } = req.body;
+
+//     // Hash the user's password before storing it
+//     const hashedPassword = await bcrypt.hash(password, 10); // Hashing the password
+
+//     // Create a new user in the database
+//     const newAPIUser = new APIUser({ username, password: hashedPassword });
+
+//     // Save the user details to MongoDB
+//     newAPIUser.save()
+//         .then(savedUser => {
+//             res.json({ message: 'User registered successfully' });
+//         })
+//         .catch(error => {
+//             console.error('Error registering user:', error);
+//             res.status(500).json({ error: 'Failed to register user' });
+//         });
+// });
 
 router.post('/login', async (req, res) => {
     const { username, password } = req.body;
