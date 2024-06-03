@@ -60,20 +60,24 @@ router.get('/update', verifyToken, async (req, res) => {
     }
 
     const existingUser = await User.find({ discordId }).exec();
-    try {
-        const newLastMatchId = await getGameCode.makeAPICallWithCode(existingUser.steamId, existingUser.matchAuthId, lastMatchId);
-        const matchId = await getMatchId.getMatchId(newLastMatchId);
+    if (!existingUser) {
+        return res.status(400).json({ error: `User not found!` });
+    } else {
+        try {
+            const newLastMatchId = await getGameCode.makeAPICallWithCode(existingUser.steamId, existingUser.matchAuthId, lastMatchId);
+            const matchId = await getMatchId.getMatchId(newLastMatchId);
 
-        // Update user with new match id
-        existingUser.lastMatchId = newLastMatchId;
-        existingUser.matchId = matchId;
-        existingUser.lastMatchUpdate = new Date();
-        existingUser.lastMatchDataSend = false;
-        await existingUser.save();
-        res.json({ message: 'Data updated to MongoDB' });
-    } catch (error) {
-        console.error('Error saving data to MongoDB:', error);
-        res.status(500).json({ error: 'Internal server error' });
+            // Update user with new match id
+            existingUser.lastMatchId = newLastMatchId;
+            existingUser.matchId = matchId;
+            existingUser.lastMatchUpdate = new Date();
+            existingUser.lastMatchDataSend = false;
+            await existingUser.save();
+            res.json({ message: 'Data updated to MongoDB' });
+        } catch (error) {
+            console.error('Error saving data to MongoDB:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 });
 
