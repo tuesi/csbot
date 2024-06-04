@@ -8,7 +8,15 @@ async function checkIfNewGamesAvailable() {
 
     try {
         // Find all users in the database
-        let users = await User.find({}).exec();
+        //let users = await User.find({}).exec();
+
+        //Find only users that last match id update date is less than a month
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+        let users = await User.find({
+            lastMatchUpdate: { $gte: oneMonthAgo }
+        }).exec();
 
         // Iterate through each user
         for (const user of users) {

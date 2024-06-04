@@ -62,7 +62,7 @@ csgo.on('connectedToGC', () => {
     // csgo.once('matchList', async (matchData, data) => {
     //     getGameData(matchData, data);
     // });
-    csgo.requestGame("CSGO-QxyzF-nv5Ft-NaO3C-a5DaQ-WmPhG");
+    //csgo.requestGame("CSGO-QxyzF-nv5Ft-NaO3C-a5DaQ-WmPhG");
 });
 
 async function checkForNewGames() {
