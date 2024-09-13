@@ -9,10 +9,10 @@
   "author": "TadasA",
   "license": "ISC",
   "engines": {
-    "node": "21"
+    "node": ">=22.7.0"
   },
   "dependencies": {
-    "@laihoe/demoparser2": "^0.26.2",
+    "@laihoe/demoparser2": "^0.32.2",
     "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
     "bignumber.js": "^9.1.2",
