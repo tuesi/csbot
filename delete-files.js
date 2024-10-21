@@ -2,6 +2,7 @@ const fs = require('fs');
 
 async function deleteFiles(matchId) {
     const localDemoBz2FilePath = `/demos/currentDemo${matchId}.dem.bz2`;
+    const localDemoGzFilePath = `/demos/currentDemo${matchId}.dem.gz`;
     const localDemoFilePath = `/demos/currentDemo${matchId}.dem`;
 
     //const localDemoBz2FilePath = `currentDemo${matchId}.dem.bz2`;
@@ -15,6 +16,22 @@ async function deleteFiles(matchId) {
 
         // File exists, so delete it
         fs.unlink(localDemoBz2FilePath, (err) => {
+            if (err) {
+                console.error('Error deleting .bz2 file:', err);
+                return;
+            }
+            console.log('.bz2 file deleted successfully');
+        });
+    });
+
+    fs.access(localDemoGzFilePath, fs.constants.F_OK, (err) => {
+        if (err) {
+            console.error('File does not exist:', err);
+            return;
+        }
+
+        // File exists, so delete it
+        fs.unlink(localDemoGzFilePath, (err) => {
             if (err) {
                 console.error('Error deleting .bz2 file:', err);
                 return;
