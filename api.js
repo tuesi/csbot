@@ -9,6 +9,7 @@ const axios = require('axios');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { verifyToken } = require('./token');
+const faceitDemo = require('./faceit/get-faceit-game');
 
 //REQUEST
 //http://localhost:3000/cs/register?steamId=76561198159334860&matchAuthId=7TKC-2W7HY-BYLM&lastMatchId=CSGO-jXhtq-dWhbp-NkABi-9svB6-ZympQ&discordId=385123236670865418
@@ -73,6 +74,36 @@ router.get('/update', verifyToken, async (req, res) => {
             existingUser.matchId = matchId;
             existingUser.lastMatchUpdate = new Date();
             existingUser.lastMatchDataSend = false;
+            await existingUser.save();
+            res.json({ message: 'Data updated to MongoDB' });
+        } catch (error) {
+            console.error('Error saving data to MongoDB:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+});
+
+router.get('/faceit-register', verifyToken, async (req, res) => {
+    // Check if all required parameters are provided
+    const { faceitNickname, discordId } = req.query;
+    if (!faceitNickname || !discordId) {
+        return res.status(400).json({ error: 'Missing required parameters' });
+    }
+
+    const existingUser = await User.findOne({ discordId }).exec();
+
+    if (!existingUser) {
+        return res.status(400).json({ error: `User not found!` });
+    } else {
+        try {
+
+            const faceitId = await faceitDemo.getFaceitPlayerId(faceitNickname);
+            const lastFaceitMatchId = await faceitDemo.getPlayerMatchHistory(faceitId);
+
+            // Update user with faceit data
+            existingUser.faceitUserId = faceitId;
+            existingUser.lastMatchDataSend = false;
+            existingUser.lastFaceitMatchId = lastFaceitMatchId[0];
             await existingUser.save();
             res.json({ message: 'Data updated to MongoDB' });
         } catch (error) {

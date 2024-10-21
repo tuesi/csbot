@@ -39,6 +39,42 @@ async function send(matchId, data) {
     }
 }
 
+async function sendFaceitGame(matchId, data) {
+    try {
+        const users = await User.find({ lastFaceitMatchId: matchId, lastMatchDataSend: false }).exec();
+        //const users = await User.find().exec();
+        let lastMatchId = null;
+        if (users.length > 0) {
+            lastMatchId = users[0].lastFaceitMatchId;
+        }
+        for (const user of users) {
+            // Update lastMatchDataSend to true
+            user.lastMatchDataSend = true;
+            user.lastMatchUpdate = new Date();
+            await user.save(); // Save the updated user document
+
+            //console.log(data.playerStats);
+            // Find and update the corresponding user in data.playerStats
+            const playerStatIndex = data.playerStats.findIndex(player => player.steamId === user.steamId);
+            if (playerStatIndex !== -1) {
+                data.playerStats[playerStatIndex].discordId = user.discordId; // Update discordId
+            }
+        }
+
+        const gameId = await saveGameData(data, lastMatchId);
+
+        data.gameId = gameId.toString();
+
+        await jimmyApi.sendCsMatchDetails(data);
+
+        data = null;
+        return true;
+    } catch (err) {
+        console.error('Error sending data:', err);
+        return true;
+    }
+}
+
 async function saveGameData(data, matchId) {
     const game = await GameData.find({ matchId: matchId }).exec();
     if (game.length == 0) {
@@ -71,4 +107,4 @@ async function saveGameData(data, matchId) {
     // }
 }
 
-module.exports = { send }
+module.exports = { send, sendFaceitGame }

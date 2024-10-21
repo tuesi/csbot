@@ -8,6 +8,8 @@ const userSchema = new mongoose.Schema({
     matchId: String,
     firstMatchId: String,
     lastMatchDataSend: Boolean,
+    faceitUserId: String,
+    lastFaceitMatchId: String,
     lastMatchUpdate: Date
 });
 

@@ -23,6 +23,8 @@ const playerGameStatus = require('./player-game-status/get-player-game-status');
 
 const defaultDataParser = require('./parser/default-data-parser');
 
+const faceitDemo = require('./faceit/get-faceit-game');
+
 let user = new SteamUser();
 const community = new SteamCommunity();
 let csgo = new GlobalOffensive(user);
@@ -82,6 +84,23 @@ csgo.on('matchList', async (matchData, data) => {
     await getGameData(matchData, data);
 });
 
+async function getFaceitData() {
+    try {
+        const users = await newGameCheck.checkIfNewFaceitGamesAvailable();
+        if (users && users.length > 0) {
+            users.forEach(async user => {
+                const faceitDemoUrl = await faceitDemo.getMatchData(user.lastFaceitMatchId);
+                const demoFilePath = await gameFileGetter.getFaceitDemoFile(faceitDemoUrl, user.lastFaceitMatchId);
+                const gameData = await gameParser.demofileParse(demoFilePath);
+                await sendGameData.sendFaceitGame(user.lastFaceitMatchId, gameData);
+                await deleteFiles.deleteFiles(user.lastFaceitMatchId);
+            });
+        }
+    } catch (error) {
+        console.error("Error while getting faceit match: ", error);
+    }
+}
+
 async function getGameData(matchData, data) {
     var defaultGameData = defaultDataParser.defaultDataParser(matchData);
     if (matchData && matchData.length > 0) {
@@ -115,7 +134,8 @@ async function getGameData(matchData, data) {
 
 //CSGO-n2t2x-xzLaN-S5CXf-fuvmE-bTsdA
 
-const checkForGamesJon = Cron('*/5 * * * *', () => { checkForNewGames() });
+const checkForGamesCron = Cron('*/5 * * * *', () => { checkForNewGames() });
+const checkForFaceitGamesCron = Cron('*/5 * * * *', () => { getFaceitData() });
 //const checkForGamesJon = Cron('*/1 * * * *', () => { checkForNewGames() });
 
 //node --inspect index.js   
@@ -125,6 +145,10 @@ const checkForGamesJon = Cron('*/5 * * * *', () => { checkForNewGames() });
 //     playerGameStatus.getPlayerStartedMatch(user);
 // });
 
+//faceitDemo.getFaceitDemoFile("https://demos-europe-central.backblaze.faceit-cdn.net/cs2/1-a8750c26-9a0d-43b7-a81c-494fd45d1baa-1-1.dem.gz");
+//faceitDemo.getFaceitPlayerId("diLodovico");
+//faceitDemo.getPlayerMatchHistory("34048673-19e9-478b-b893-e869deb08391");
+//faceitDemo.getMatchData("1-3e6f2bc8-c6ca-433b-9076-03ecbf659115");
 
 user.on('friendRelationship', (steamID, relationship) => {
     if (relationship === SteamUser.EFriendRelationship.RequestRecipient) {
@@ -158,8 +182,6 @@ var logOnDetails = {
 };
 
 logOnDetails.auth_code = process.env.AUTH_CODE;
-
-//user.logOn(logOnDetails);
 
 user.logOn(logOnDetails);
 
