@@ -86,17 +86,18 @@ csgo.on('matchList', async (matchData, data) => {
 
 async function getFaceitData() {
     try {
+        console.log("get faceit data");
         const users = await newGameCheck.checkIfNewFaceitGamesAvailable();
-        if (users && users.length > 0) {
-            users.forEach(async user => {
-                const faceitDemoUrl = await faceitDemo.getMatchData(user.lastFaceitMatchId);
-                const demoUrl = await faceitDemo.getFaceitDemoFile(faceitDemoUrl);
-                const demoFilePath = await gameFileGetter.getFaceitDemoFile(demoUrl, user.lastFaceitMatchId);
-                const gameData = await gameParser.demofileParse(demoFilePath);
-                await sendGameData.sendFaceitGame(user.lastFaceitMatchId, gameData);
-                await deleteFiles.deleteFiles(user.lastFaceitMatchId);
-            });
-        }
+        // if (users && users.length > 0) {
+        //     users.forEach(async user => {
+        //         const faceitDemoUrl = await faceitDemo.getMatchData(user.lastFaceitMatchId);
+        //         const demoUrl = await faceitDemo.getFaceitDemoFile(faceitDemoUrl);
+        //         const demoFilePath = await gameFileGetter.getFaceitDemoFile(demoUrl, user.lastFaceitMatchId);
+        //         const gameData = await gameParser.demofileParse(demoFilePath);
+        //         await sendGameData.sendFaceitGame(user.lastFaceitMatchId, gameData);
+        //         await deleteFiles.deleteFiles(user.lastFaceitMatchId);
+        //     });
+        // }
     } catch (error) {
         console.error("Error while getting faceit match: ", error);
     }
@@ -136,7 +137,7 @@ async function getGameData(matchData, data) {
 //CSGO-n2t2x-xzLaN-S5CXf-fuvmE-bTsdA
 
 const checkForGamesCron = Cron('*/5 * * * *', () => { checkForNewGames() });
-const checkForFaceitGamesCron = Cron('*/5 * * * *', () => { getFaceitData() });
+const checkForFaceitGamesCron = Cron('* * * * *', () => { getFaceitData() });
 //const checkForGamesJon = Cron('*/1 * * * *', () => { checkForNewGames() });
 
 //node --inspect index.js   

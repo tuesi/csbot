@@ -61,20 +61,20 @@ async function checkIfNewFaceitGamesAvailable() {
 
     try {
         // Find all users in the database
-        //let users = await User.find({}).exec();
+        let users = await User.find({}).exec();
 
         //Find only users that last match id update date is less than a month
-        const oneMonthAgo = new Date();
-        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+        // const oneMonthAgo = new Date();
+        // oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-        let users = await User.find({
-            lastMatchUpdate: { $gte: oneMonthAgo }
-        }).exec();
+        // let users = await User.find({
+        //     lastMatchUpdate: { $gte: oneMonthAgo }
+        // }).exec();
 
         // Iterate through each user
         for (const user of users) {
             if (!user.faceitUserId) {
-                return;
+                continue;
             }
             // Perform the getMatch operation on the user's data
             const latestMatchId = await faceitDemo.getPlayerMatchHistory(user.faceitUserId);
@@ -88,14 +88,14 @@ async function checkIfNewFaceitGamesAvailable() {
                 const existingUser = await User.findOne({ matchId });
 
                 // Update the user's lastMatchId in MongoDB
-                const updatedUser = await User.findOneAndUpdate(
-                    { discordId: user.discordId }, // Find user by discordId
-                    {
-                        lastFaceitMatchId: matchId,
-                        lastMatchDataSend: false
-                    },
-                    { new: true }, // To return the updated user document
-                );
+                // const updatedUser = await User.findOneAndUpdate(
+                //     { discordId: user.discordId }, // Find user by discordId
+                //     {
+                //         lastFaceitMatchId: matchId,
+                //         lastMatchDataSend: false
+                //     },
+                //     { new: true }, // To return the updated user document
+                // );
 
                 if (!existingUser) {
                     updatedUsers.push(updatedUser);
