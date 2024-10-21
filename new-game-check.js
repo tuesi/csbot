@@ -88,14 +88,14 @@ async function checkIfNewFaceitGamesAvailable() {
                 const existingUser = await User.findOne({ matchId });
 
                 // Update the user's lastMatchId in MongoDB
-                // const updatedUser = await User.findOneAndUpdate(
-                //     { discordId: user.discordId }, // Find user by discordId
-                //     {
-                //         lastFaceitMatchId: matchId,
-                //         lastMatchDataSend: false
-                //     },
-                //     { new: true }, // To return the updated user document
-                // );
+                const updatedUser = await User.findOneAndUpdate(
+                    { discordId: user.discordId }, // Find user by discordId
+                    {
+                        lastFaceitMatchId: matchId,
+                        lastMatchDataSend: false
+                    },
+                    { new: true }, // To return the updated user document
+                );
 
                 if (!existingUser) {
                     updatedUsers.push(updatedUser);
