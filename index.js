@@ -91,7 +91,7 @@ async function getFaceitData() {
         if (users && users.length > 0) {
             users.forEach(async user => {
                 const faceitDemoUrl = await faceitDemo.getMatchData(user.lastFaceitMatchId);
-                const demoUrl = await faceitDemo.getFaceitDemoFile(faceitDemoUrl);
+                const demoUrl = await faceitDemo.getFaceitDemoFile(faceitDemoUrl, false);
                 const demoFilePath = await gameFileGetter.getFaceitDemoFile(demoUrl, user.lastFaceitMatchId);
                 const gameData = await gameParser.demofileParse(demoFilePath);
                 await sendGameData.sendFaceitGame(user.lastFaceitMatchId, gameData);

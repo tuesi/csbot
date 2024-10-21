@@ -1,6 +1,10 @@
 const axios = require('axios');
 
-async function getFaceitDemoFile(resourceUrl) {
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function getFaceitDemoFile(resourceUrl, retry) {
     try {
         console.log('download faceitFile');
         const demoFileResponse = await axios.post("https://open.faceit.com/download/v2/demos/download", { resource_url: resourceUrl }, {
@@ -11,6 +15,10 @@ async function getFaceitDemoFile(resourceUrl) {
         });
         return demoFileResponse.data.payload.download_url;
     } catch (e) {
+        if (!retry) {
+            await delay(60000);
+            await getFaceitDemoFile(resourceUrl, true);
+        }
         console.error(e);
     }
 }

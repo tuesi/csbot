@@ -28,6 +28,7 @@ async function send(matchId, data) {
         const gameId = await saveGameData(data, lastMatchId);
 
         data.gameId = gameId.toString();
+        data.dataSource = 'VALVE';
 
         await jimmyApi.sendCsMatchDetails(data);
 
@@ -64,6 +65,7 @@ async function sendFaceitGame(matchId, data) {
         const gameId = await saveGameData(data, lastMatchId);
 
         data.gameId = gameId.toString();
+        data.dataSource = 'FACEIT';
 
         await jimmyApi.sendCsMatchDetails(data);
 
