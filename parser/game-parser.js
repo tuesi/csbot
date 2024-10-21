@@ -163,9 +163,9 @@ function getDataForPlayer(steamId, name, team, other_death, totalRounds, flash, 
     playerStats.pimpesMentele = pimpesMentele;
     playerStats.team = team;
     playerStats.matchWon = (userTeam == "TERRORIST" && TWinAmount > CTWinAmount || userTeam == "CT" && CTWinAmount > TWinAmount) ? true : false;
-    playerStats.rankNew = userScore[0].rank_new;
-    playerStats.rankOld = userScore[0].rank_old;
-    playerStats.rankChange = userScore[0].rank_change;
+    playerStats.rankNew = userScore[0].rank_new ?? 0;
+    playerStats.rankOld = userScore[0].rank_old ?? 0;
+    playerStats.rankChange = userScore[0].rank_change ?? 0;
     playerStats.chickenKills = chickenKills.length;
     playerStats.heDmg = heAllDmg;
     playerStats.molotovDmg = molotovAllDmg;
