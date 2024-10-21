@@ -104,6 +104,7 @@ router.get('/faceit-register', verifyToken, async (req, res) => {
             existingUser.faceitUserId = faceitId;
             existingUser.lastMatchDataSend = false;
             existingUser.lastFaceitMatchId = lastFaceitMatchId[0];
+            existingUser.lastMatchUpdate = new Date();
             await existingUser.save();
             res.json({ message: 'Data updated to MongoDB' });
         } catch (error) {

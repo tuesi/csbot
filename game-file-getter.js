@@ -6,11 +6,11 @@ const zlib = require('zlib');
 //delay 60000
 async function getDemoFile(matchId, demoUrl, retries = 3, delay = 60000) {
 
-    //const localDemoBz2FilePath = `/demos/currentDemo${matchId}.dem.bz2`;
-    //const localDemoFilePath = `/demos/currentDemo${matchId}.dem`;
+    const localDemoBz2FilePath = `/demos/currentDemo${matchId}.dem.bz2`;
+    const localDemoFilePath = `/demos/currentDemo${matchId}.dem`;
 
-    const localDemoBz2FilePath = `currentDemo${matchId}.dem.bz2`;
-    const localDemoFilePath = `currentDemo${matchId}.dem`;
+    // const localDemoBz2FilePath = `currentDemo${matchId}.dem.bz2`;
+    // const localDemoFilePath = `currentDemo${matchId}.dem`;
 
     console.log('get demo');
 
@@ -69,11 +69,11 @@ async function getDemoFile(matchId, demoUrl, retries = 3, delay = 60000) {
 
 async function getFaceitDemoFile(fileUrl, matchId) {
 
-    //const localDemoBz2FilePath = `/demos/currentDemo${matchId}.dem.gz`;
-    //const localDemoFilePath = `/demos/currentDemo${matchId}.dem`;
+    const localDemoGzFilePath = `/demos/currentDemo${matchId}.dem.gz`;
+    const localDemoFilePath = `/demos/currentDemo${matchId}.dem`;
 
-    const localDemoGzFilePath = `currentDemo${matchId}.dem.gz`; // Change to .gz
-    const localDemoFilePath = `currentDemo${matchId}.dem`;
+    // const localDemoGzFilePath = `currentDemo${matchId}.dem.gz`; // Change to .gz
+    // const localDemoFilePath = `currentDemo${matchId}.dem`;
 
     try {
         // Step 1: Download the GZip file

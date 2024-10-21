@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 async function getFaceitDemoFile(resourceUrl) {
+    console.log('download faceitFile');
     try {
         const demoFileResponse = await axios.post("https://open.faceit.com/download/v2/demos/download", { resource_url: resourceUrl }, {
             headers: {
@@ -31,6 +32,7 @@ async function getPlayerMatchHistory(playerId) {
             'Authorization': `Bearer ${process.env.FACEIT_TOKEN}`
         }
     });
+    console.log(machHistoryData.data.items[0].match_id);
     return [machHistoryData.data.items[0].match_id, machHistoryData.data.items[0].game_mode];
 }
 
@@ -41,6 +43,7 @@ async function getMatchData(matchId) {
             'Authorization': `Bearer ${process.env.FACEIT_TOKEN}`
         }
     });
+    console.log(matchData.data.demo_url[0]);
     return matchData.data.demo_url[0];
 }
 

@@ -90,7 +90,8 @@ async function getFaceitData() {
         if (users && users.length > 0) {
             users.forEach(async user => {
                 const faceitDemoUrl = await faceitDemo.getMatchData(user.lastFaceitMatchId);
-                const demoFilePath = await gameFileGetter.getFaceitDemoFile(faceitDemoUrl, user.lastFaceitMatchId);
+                const demoUrl = await faceitDemo.getFaceitDemoFile(faceitDemoUrl);
+                const demoFilePath = await gameFileGetter.getFaceitDemoFile(demoUrl, user.lastFaceitMatchId);
                 const gameData = await gameParser.demofileParse(demoFilePath);
                 await sendGameData.sendFaceitGame(user.lastFaceitMatchId, gameData);
                 await deleteFiles.deleteFiles(user.lastFaceitMatchId);
