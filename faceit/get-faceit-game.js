@@ -41,7 +41,7 @@ async function getPlayerMatchHistory(playerId) {
                 'Authorization': `Bearer ${process.env.FACEIT_TOKEN}`
             }
         });
-        console.log(machHistoryData.data.items[0].match_id);
+        // console.log(machHistoryData.data.items[0].match_id);
         return [machHistoryData.data.items[0].match_id, machHistoryData.data.items[0].game_mode];
     } catch (e) {
         console.error(e);
