@@ -86,7 +86,6 @@ csgo.on('matchList', async (matchData, data) => {
 
 async function getFaceitData() {
     try {
-        console.log("get faceit data");
         const users = await newGameCheck.checkIfNewFaceitGamesAvailable();
         if (users && users.length > 0) {
             users.forEach(async user => {
@@ -178,6 +177,10 @@ csgo.on('error', (err) => {
     console.error('CS:GO GC error:', err);
 });
 
+user.on('error', (err) => {
+    console.error('Steam login error:', err);
+});
+
 var logOnDetails = {
     "accountName": process.env.ACCOUNT_NAME,
     "password": process.env.ACCOUNT_PASSWORD
@@ -192,6 +195,10 @@ user.once('steamGuard', (domain, callback) => {
     const steamGuardCode = process.env.AUTH_CODE;
     callback(steamGuardCode);
 });
+
+// user.on('debug', (msg) => {
+//     console.log('Debug:', msg);
+// });
 
 //UNCOMMENT WHEN FRONTEND DEPLOYED
 

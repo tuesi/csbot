@@ -35,7 +35,6 @@ async function getFaceitPlayerId(nickname) {
 
 async function getPlayerMatchHistory(playerId) {
     try {
-        console.log('get match history');
         const machHistoryData = await axios.get(`https://open.faceit.com/data/v4/players/${playerId}/history`, {
             headers: {
                 'Content-Type': 'application/json',
