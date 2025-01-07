@@ -25,6 +25,8 @@ const defaultDataParser = require('./parser/default-data-parser');
 
 const faceitDemo = require('./faceit/get-faceit-game');
 
+const getGamePlayers = require('./get-game-players');
+
 let user = new SteamUser();
 const community = new SteamCommunity();
 let csgo = new GlobalOffensive(user);
@@ -105,6 +107,9 @@ async function getFaceitData() {
 async function getGameData(matchData, data) {
     var defaultGameData = defaultDataParser.defaultDataParser(matchData);
     if (matchData && matchData.length > 0) {
+        //Set game data from players that were not updated but played the game
+        await getGamePlayers.getGamePlayers(matchData[0].matchid, defaultGameData);
+
         for (const element of matchData[0].roundstatsall) {
             if (element.map) {
                 var gameData;
