@@ -33,7 +33,7 @@ async function demofileParse(demoPath) {
 
         let gameEndTick = Math.max(...parseEvent(demoPath, "round_end").map(x => x.tick))
 
-        let totalRounds = parseTicks(demoPath, ["team_name", "team_rounds_total", "kills_total", "deaths_total", "assists_total", "headshot_kills_total", "ace_rounds_total", "4k_rounds_total", "3k_rounds_total", "damage_total", "utility_damage_total", "enemies_flashed_total", "equipment_value_total", "money_saved_total", "kill_reward_total", "cash_earned_total", "mvps", "total_cash_spent", "score", "total_cash_spent"], [gameEndTick]);
+        let totalRounds = parseTicks(demoPath, ["team_name", "team_rounds_total", "kills_total", "deaths_total", "assists_total", "headshot_kills_total", "ace_rounds_total", "4k_rounds_total", "3k_rounds_total", "damage_total", "utility_damage_total", "enemies_flashed_total", "equipment_value_total", "money_saved_total", "kill_reward_total", "cash_earned_total", "mvps", "total_cash_spent", "score", "total_cash_spent", "rank", "rank_if_win", "rank_if_loss", "rank_if_tie"], [gameEndTick]);
 
         players.forEach(player => {
             allPlayerStats.push(getDataForPlayer(player.steamid, player.name, player.team_number, other_death, totalRounds, flash, kills, playerHurtEvents, roundEnd, playersEachRound));
@@ -135,6 +135,8 @@ function getDataForPlayer(steamId, name, team, other_death, totalRounds, flash, 
         molotovAllDmg += dmg.dmg_health;
     });
 
+    let isTie = TWinAmount === CTWinAmount;
+
     let playerStats = new PlayerStat();
 
     playerStats.steamId = steamId;
@@ -163,9 +165,29 @@ function getDataForPlayer(steamId, name, team, other_death, totalRounds, flash, 
     playerStats.pimpesMentele = pimpesMentele;
     playerStats.team = team;
     playerStats.matchWon = (userTeam == "TERRORIST" && TWinAmount > CTWinAmount || userTeam == "CT" && CTWinAmount > TWinAmount) ? true : false;
-    playerStats.rankNew = userScore[0].rank_new ?? 0;
-    playerStats.rankOld = userScore[0].rank_old ?? 0;
-    playerStats.rankChange = userScore[0].rank_change ?? 0;
+
+    let newRank = userScore[0].rank;
+    if (isTie) {
+        newRank = userScore[0].rank_if_tie;
+    } else {
+        newRank = playerStats.matchWon ? userScore[0].rank_if_win ?? 0 : userScore[0].rank_if_loss ?? 0;
+    }
+
+    playerStats.rankNew = newRank;
+    playerStats.rankOld = userScore[0].rank ?? 0;
+
+    const rankThreshold = 5000;
+    const previousRank = Math.floor(playerStats.rankOld / rankThreshold);
+    const currentRank = Math.floor(playerStats.rankNew / rankThreshold);
+
+    if (currentRank > previousRank) {
+        playerStats.rankChange = 1;
+    } else if (currentRank < previousRank) {
+        playerStats.rankChange = -1;
+    } else {
+        playerStats.rankChange = 0;
+    }
+
     playerStats.chickenKills = chickenKills.length;
     playerStats.heDmg = heAllDmg;
     playerStats.molotovDmg = molotovAllDmg;
