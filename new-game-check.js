@@ -44,6 +44,7 @@ async function checkIfNewGamesAvailable() {
                 );
 
                 if (!existingUser) {
+                    console.log("Adding unique match user to queue");
                     updatedUsers.push(updatedUser);
                 }
                 console.log(`Updated user ${user.discordId}'s lastMatchId`);
