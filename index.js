@@ -72,8 +72,9 @@ csgo.on('connectedToGC', () => {
 async function checkForNewGames() {
     try {
         const users = await newGameCheck.checkIfNewGamesAvailable();
+        console.log(users.length);
         if (users && users.length > 0) {
-            users.forEach(async user => {
+            users.forEach(user => {
                 csgo.requestGame(user.lastMatchId);
             });
         }
@@ -83,6 +84,7 @@ async function checkForNewGames() {
 }
 
 csgo.on('matchList', async (matchData, data) => {
+    console.log("received match data");
     await getGameData(matchData, data);
 });
 
